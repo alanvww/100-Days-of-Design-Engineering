@@ -6,3 +6,5 @@ day: 2
 ---
 
 # Day 2: Markdown File Loader
+
+![Screenshot of Day 2 Progress](/assets/day-2/2.png)
