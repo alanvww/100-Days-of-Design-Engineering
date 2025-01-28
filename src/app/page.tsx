@@ -2,7 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { getAllProjects } from '@/lib/markdown';
 
-const ProjectCard = ({ project }) => (
+interface ProjectCardProps {
+    project: {
+        day: number;
+        image: string;
+    };
+}
+
+const ProjectCard = ({ project }: ProjectCardProps) => (
     <Link href={`/days/${project.day}`}>
         <div className="group relative transition-all">
             <div className="relative aspect-square overflow-hidden rounded-lg">

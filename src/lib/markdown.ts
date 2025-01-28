@@ -26,6 +26,7 @@ export async function getMarkdownContent(slug: string) {
 
         return result.toString()
     } catch (error) {
+        console.log('Error reading markdown content:', error)
         return null
     }
 }
