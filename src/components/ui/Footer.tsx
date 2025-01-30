@@ -4,6 +4,7 @@ import { InfiniteSlider } from './infinite-slider';
 export function Footer() {
     return (
         <footer>
+            <hr></hr>
             <div className='mx-auto flex max-w-7xl flex-col justify-center px-6 pb-4 pt-12 md:flex-row md:justify-between md:px-8'>
                 <p className='text-sm text-zinc-500'>
                     © {new Date().getFullYear()} Made with ❤️ by <a href='https://alan.ooo' className='underline'>Alan Ren</a>
@@ -19,7 +20,7 @@ export function Footer() {
             </div>
             <div className='overflow-hidden'>
                 <InfiniteSlider
-                    className='-mb-14 text-9xl leading-[100%] text-black dark:text-white sm:text-[12rem]'
+                    className='select-none -mb-14 text-9xl leading-[100%] text-black dark:text-white sm:text-[12rem]'
                     gap={80}
                 >
                     <div>100 Days of Design Engineering</div>

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getAllProjects } from '@/lib/markdown';
 import { Footer } from "@/components/ui/Footer";
+import { Navbar } from "@/components/ui/Navbar";
 
 interface ProjectCardProps {
     project: {
@@ -24,7 +25,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => (
                     className="object-cover w-full h-full"
                     priority={project.day <= 6} // Prioritize loading for first 6 images
                 />
-                <div className="group absolute inset-0 bg-gray-800/30 hover:bg-gray-800/70 transition-all duration-300">
+                <div className="group absolute inset-0 bg-transparent hover:bg-gray-800/70 transition-all duration-300">
                     <div className="p-4 h-full flex flex-col justify-between">
                         <span className="text-2xl sm:text-4xl font-bold text-white">
                             Day {project.day}
@@ -46,7 +47,8 @@ export default async function Home() {
         <div className="min-h-screen flex flex-col">
             <main className="flex-1 container mx-auto px-4 py-8 sm:py-16">
                 <div className="space-y-6 sm:space-y-8 mb-12">
-                    <h1 className="text-4xl sm:text-6xl md:text-8xl text-left">
+                <Navbar />
+                    <h1 className="text-3xl md:text-8xl text-left">
                         100 Days of Design Engineering
                     </h1>
                     <p className="text-base sm:text-lg text-left text-gray-600 max-w-3xl">
@@ -54,7 +56,7 @@ export default async function Home() {
                     </p>
                 </div>
 
-                <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 justify-items-center">
+                <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 justify-items-center">
                     {projects.map((project) => (
                         <ProjectCard key={project.day} project={project} />
                     ))}

@@ -1,5 +1,5 @@
 ---
-title: "Footer Update"
+title: "100 Days Project Showcase: Footer Update"
 description: "Brief description of the project and the engineering problem solved."
 image: "/assets/day-3/2.png"
 day: 3

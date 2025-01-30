@@ -1,5 +1,5 @@
 ---
-title: "Markdown File Loader: 100 Days Project Showcase"
+title: "100 Days Project Showcase: Markdown File Loader"
 description: "Brief description of the project and the engineering problem solved."
 image: "/assets/day-2/2.png"
 day: 2
