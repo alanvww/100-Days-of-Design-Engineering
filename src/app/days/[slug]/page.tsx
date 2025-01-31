@@ -16,7 +16,6 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const resolvedParams = await params;
     const slug = resolvedParams.slug;
-
     return {
         title: `Day ${slug} - Design Engineering`,
         description: `Design engineering project for day ${slug}`,
@@ -36,17 +35,28 @@ export default async function DayPage({ params }: PageProps) {
     return (
         <div className="min-h-screen flex flex-col">
             <main className="flex-1 container mx-auto px-4 py-8 sm:py-16">
-                <div className="space-y-6 sm:space-y-8 mb-12">
+                <div className="relative">
                     <Navbar />
-                    <h1 className="text-3xl md:text-8xl text-left">
-                        Day {slug}:{project?.title}
-                    </h1>
-                    <p className={`w-fit md:ml-8 px-3 py-1  text-base bg-gray-800 text-white border shadow-sm rounded-full`}>{project?.project}</p>
+                    {/* Background project name */}
+                    <div className="absolute left-0 w-full overflow-hidden select-none pointer-events-none">
+                        <div
+                            className="md:text-[8rem] text-right my-14 text-[3rem] font-bold opacity-15 text-gray-600 tracking-tight leading-none"
+                            style={{ color: project?.color }}
+                        >
+                            {project?.project}
+                        </div>
+                    </div>
+                    {/* Foreground title */}
+                    <div className="relative md:my-36 my-20">
+                        <h1 className="text-3xl md:text-8xl font-bold text-left text-gray-700 bg-blend-multiply">
+                            Day {slug}: {project?.title}
+                        </h1>
+                    </div>
                 </div>
-                <article className="max-w-4xl mx-auto px-4">
+                <article className="max-w-4xl mx-auto px-4 mt-16">
                     <MarkdownContent
                         content={content}
-                        className="prose-headings:scroll-mt-20" // Adds padding for anchor links
+                        className="prose-headings:scroll-mt-20"
                     />
                 </article>
             </main>

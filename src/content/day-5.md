@@ -4,7 +4,7 @@ description: 'Brief description of the project and the engineering problem solve
 project: '100 Days Project Showcase'
 image: '/assets/day-5/2.png'
 day: 5
-color: #354863
+color: '#354863'
 ---
 
 
