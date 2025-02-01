@@ -37,6 +37,7 @@ const MarkdownContent = ({ content, className }: MarkdownContentProps) => {
             if (tag === 'p' && attributes.includes('<img')) {
                 return `<p${attributes} class="my-8">`;
             }
+
             // Default handling
             return `<${tag}${attributes} class="${styleMap[tag]}">`;
         }

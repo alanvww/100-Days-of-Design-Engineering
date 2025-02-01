@@ -4,6 +4,8 @@ import { Metadata } from 'next';
 import { Navbar } from '@/components/ui/Navbar';
 import { Footer } from '@/components/ui/Footer';
 import MarkdownContent from '@/components/MakrdownContent';
+import CodePreview from '@/components/CodePreview';
+import ComponentRenderer from '@/components/ConponentRenderer'; // Import ComponentRenderer
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -28,9 +30,25 @@ export default async function DayPage({ params }: PageProps) {
     const project = await getProject(slug);
     const content = await getMarkdownContent(slug);
 
-    if (!content) {
+    if (!content && !project) {
         notFound();
     }
+
+// Function to wrap the code with imports and component definition
+const wrappedCode = project?.code
+? `
+'use client';
+
+import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
+
+export default function Component() {
+  return (
+    ${project.code}
+  );
+}
+`
+: '';
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -55,10 +73,11 @@ export default async function DayPage({ params }: PageProps) {
                 </div>
                 <article className="max-w-4xl mx-auto px-4 mt-16">
                     <MarkdownContent
-                        content={content}
+                        content={content || ''}
                         className="prose-headings:scroll-mt-20"
                     />
                 </article>
+                {project?.code && <ComponentRenderer codeString={wrappedCode} />}
             </main>
             <Footer />
         </div>

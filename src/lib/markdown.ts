@@ -12,6 +12,7 @@ export interface ProjectFrontmatter {
 	image: string;
 	day: number;
 	color: string;
+	code: string | null;
 }
 
 export async function getProject(
