@@ -4,16 +4,21 @@ import dynamic from 'next/dynamic';
 
 interface ComponentRendererProps {
     codeString: string;
+    wrapCode?: (code: string) => string; // Optional function to wrap code
 }
 
-const ComponentRenderer: React.FC<ComponentRendererProps> = ({ codeString }) => {
+const ComponentRenderer: React.FC<ComponentRendererProps> = ({
+    codeString,
+    wrapCode = (code) => code, // Default to no wrapping
+}) => {
     const [Component, setComponent] = useState<React.ComponentType | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const loadComponent = async () => {
             try {
-                const encodedCode = btoa(unescape(encodeURIComponent(codeString)));
+                const wrappedCode = wrapCode(codeString); // Wrap the code if needed
+                const encodedCode = btoa(unescape(encodeURIComponent(wrappedCode)));
                 const dataUrl = `data:text/javascript;base64,${encodedCode}`;
 
                 const Component = await dynamic(
@@ -29,7 +34,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({ codeString }) => 
         };
 
         loadComponent();
-    }, [codeString]);
+    }, [codeString, wrapCode]);
 
     if (error) {
         return <div className="text-red-500 p-4">{error}</div>;

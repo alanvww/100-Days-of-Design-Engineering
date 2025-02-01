@@ -26,11 +26,12 @@ const CodePreview: React.FC<CodePreviewProps> = ({ codeString }) => {
             if (!codeString || !previewRef.current) return;
 
             try {
-                const encodedCode = btoa(unescape(encodeURIComponent(codeString)));
-                const dataUrl = `data:text/javascript;base64,${encodedCode}`;
+                // Create a new blob and URL for the code
+                const blob = new Blob([codeString], { type: 'text/javascript' });
+                const url = URL.createObjectURL(blob);
 
                 // Dynamically import the code as a module
-                const newModule = await import(dataUrl);
+                const newModule = await import(url);
                 const Component = newModule.default;
 
                 if (typeof Component === 'function') {
@@ -42,6 +43,9 @@ const CodePreview: React.FC<CodePreviewProps> = ({ codeString }) => {
                         'The imported module does not export a React component by default.'
                     );
                 }
+
+                // Clean up the URL
+                URL.revokeObjectURL(url);
             } catch (e) {
                 console.error('Error rendering code:', e);
                 setError('Failed to render the provided code.');

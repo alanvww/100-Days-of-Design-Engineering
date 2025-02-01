@@ -5,7 +5,6 @@ import { Navbar } from '@/components/ui/Navbar';
 import { Footer } from '@/components/ui/Footer';
 import MarkdownContent from '@/components/MakrdownContent';
 import CodePreview from '@/components/CodePreview';
-import ComponentRenderer from '@/components/ConponentRenderer'; // Import ComponentRenderer
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -34,21 +33,19 @@ export default async function DayPage({ params }: PageProps) {
         notFound();
     }
 
-// Function to wrap the code with imports and component definition
-const wrappedCode = project?.code
-? `
-'use client';
+    // Wrap the code from frontmatter with necessary imports and structure
+    const wrappedCode = `
+  'use client';
 
-import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+  import { Button } from "@/components/ui/button";
+  import { Sparkles } from "lucide-react";
 
-export default function Component() {
-  return (
-    ${project.code}
-  );
-}
-`
-: '';
+  export default function Component() {
+    return (
+      <></>
+    );
+  }
+`;
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -77,7 +74,9 @@ export default function Component() {
                         className="prose-headings:scroll-mt-20"
                     />
                 </article>
-                {project?.code && <ComponentRenderer codeString={wrappedCode} />}
+                {/* Code preview */}
+                {project?.code && (<CodePreview codeString={wrappedCode || ''} />)}
+
             </main>
             <Footer />
         </div>
