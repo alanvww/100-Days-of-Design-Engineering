@@ -40,15 +40,15 @@ export default async function DayPage({ params }: PageProps) {
                     {/* Background project name */}
                     <div className="absolute left-0 w-full overflow-hidden select-none pointer-events-none">
                         <div
-                            className="md:text-[8rem] text-right my-14 text-[3rem] font-bold opacity-15 text-gray-600 tracking-tight leading-none"
+                            className="md:text-[8rem] text-right my-14 text-[3rem]  opacity-15 text-gray-600 tracking-tight leading-none"
                             style={{ color: project?.color }}
                         >
                             {project?.project}
                         </div>
                     </div>
                     {/* Foreground title */}
-                    <div className="relative md:my-36 my-20">
-                        <h1 className="text-3xl md:text-8xl font-bold text-left text-gray-700 bg-blend-multiply">
+                    <div className="relative md:my-32 my-20 w-3/4">
+                        <h1 className="text-3xl md:text-8xl  text-left text-gray-700 bg-blend-multiply">
                             Day {slug}: {project?.title}
                         </h1>
                     </div>
