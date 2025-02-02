@@ -9,9 +9,9 @@ const NAVIGATION_ITEMS = [
         href: '/',
     },
     {
-        id: 'about',
-        label: 'About Me',
-        href: '/about',
+        id: 'resume',
+        label: 'Resume',
+        href: 'https://link.alan.ooo/resume',
     },
     {
         id: 'portfolio',
