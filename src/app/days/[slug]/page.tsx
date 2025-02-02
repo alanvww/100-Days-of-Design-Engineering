@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 import { Navbar } from '@/components/ui/Navbar';
 import { Footer } from '@/components/ui/Footer';
 import MarkdownContent from '@/components/MakrdownContent';
+import ElementShowcase from '@/components/ElementShowcase';
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -28,7 +29,13 @@ export default async function DayPage({ params }: PageProps) {
     const project = await getProject(slug);
     const content = await getMarkdownContent(slug);
 
-    if (!content) {
+    const dayNumber = parseInt(slug, 10);
+
+    if (isNaN(dayNumber)) {
+        notFound();
+    }
+
+    if (!content && !project) {
         notFound();
     }
 
@@ -55,9 +62,13 @@ export default async function DayPage({ params }: PageProps) {
                 </div>
                 <article className="max-w-4xl mx-auto px-4 mt-16">
                     <MarkdownContent
-                        content={content}
+                        content={content? content : ''}
                         className="prose-headings:scroll-mt-20"
                     />
+                    {/* Element Showcase */}
+                    <div className="mt-16">
+                        <ElementShowcase day={dayNumber} />
+                    </div>
                 </article>
             </main>
             <Footer />
