@@ -27,7 +27,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => (
                 />
                 <div className="group absolute inset-0 bg-transparent hover:bg-gray-800/70 transition-all duration-300">
                     <div className="p-4 h-full flex flex-col justify-between">
-                        <span className="text-2xl sm:text-4xl font-bold text-white">
+                        <span className="text-2xl sm:text-4xl text-white">
                             Day {project.day}
                         </span>
                         <span className="text-lg sm:text-xl text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
