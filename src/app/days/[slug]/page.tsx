@@ -3,7 +3,7 @@ import { getMarkdownContent, getProject } from '@/lib/markdown';
 import { Metadata } from 'next';
 import { Navbar } from '@/components/ui/Navbar';
 import { Footer } from '@/components/ui/Footer';
-import MarkdownContent from '@/components/MakrdownContent';
+import MarkdownContent from '@/components/MarkdownContent';
 import ElementShowcase from '@/components/ElementShowcase';
 
 type Params = Promise<{ slug: string }>;
