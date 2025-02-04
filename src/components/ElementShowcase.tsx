@@ -3,6 +3,10 @@ import React, { JSX, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Copy, Check } from 'lucide-react';
 import TextEditor from '@/elements/text-editor';
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
+import { dracula } from '@uiw/codemirror-theme-dracula';
+
 
 interface UIElement {
     name: string;
@@ -220,7 +224,7 @@ export default function TextEditor() {
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
     const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-    
+
     const handleCopy = async (code: string, index: number) => {
         try {
             await navigator.clipboard.writeText(code);
@@ -257,9 +261,9 @@ const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
                         </TabsContent>
                         <TabsContent value="code" className="p-4 border rounded">
                             <div className="relative">
-                                <button 
+                                <button
                                     onClick={() => handleCopy(element.code, index)}
-                                    className="absolute right-2 top-2 p-2 rounded hover:bg-gray-200 transition-colors"
+                                    className="absolute right-2 top-2 z-[100] p-2 rounded bg-opacity-60 bg-white hover:bg-gray-200 transition-colors"
                                     aria-label="Copy code"
                                 >
                                     {copiedIndex === index ? (
@@ -268,11 +272,21 @@ const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
                                         <Copy className="h-4 w-4" />
                                     )}
                                 </button>
-                                <pre className="bg-gray-100 p-2 rounded overflow-x-auto">
-                                    <code>{element.code}</code>
-                                </pre>
+                                <div className="relative z-0">
+                                    <CodeMirror
+                                        value={element.code}
+                                        height="100%"  // adjust height as needed
+                                        extensions={[javascript({ jsx: true })]}
+                                        readOnly={true}
+                                        basicSetup={{
+                                            lineNumbers: true,
+                                            highlightActiveLine: true,
+                                        }}
+                                    />
+                                </div>
                             </div>
                         </TabsContent>
+
                     </Tabs>
                 </div>
             ))}
