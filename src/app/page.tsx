@@ -1,7 +1,7 @@
 import { getAllProjects } from '@/lib/markdown';
 import { Footer } from "@/components/ui/Footer";
 import { Navbar } from "@/components/ui/Navbar";
-import { PaginatedProjects } from "@/components/PaginatedProjects";
+import ProjectViewSwitcher from "@/components/ProjectViewSwitcher";
 import { Project } from "@/types/ProjectTypes";
 
 export const dynamic = 'force-static';
@@ -13,7 +13,7 @@ async function getProjects(): Promise<Project[]> {
 
 export default async function Home() {
     const projects = await getProjects();
-
+    
     return (
         <div className="min-h-screen flex flex-col">
             <main className="flex-1 container mx-auto px-4 md:px-4 md:py-8 py-16">
@@ -26,10 +26,10 @@ export default async function Home() {
                         Showcase of Alan&apos;s design engineering journey over 100 days.
                     </p>
                 </div>
-
-                <PaginatedProjects projects={projects} />
+                
+                <ProjectViewSwitcher projects={projects} />
             </main>
-
+            
             <Footer />
         </div>
     );
