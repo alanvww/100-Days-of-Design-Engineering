@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { useMotionValue, animate, motion } from 'motion/react';
+import { useMotionValue, animate, motion, AnimationPlaybackControls } from 'motion/react';
 import { useState, useEffect } from 'react';
 import useMeasure from 'react-use-measure';
 
@@ -27,7 +27,7 @@ export function ReactMarquee({
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    let controls;
+    let controls: AnimationPlaybackControls;
     const size = direction === 'horizontal' ? width : height;
     const contentSize = size + gap;
     const from = reverse ? -contentSize / 2 : 0;
