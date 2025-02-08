@@ -6,6 +6,7 @@ import TextEditor from '@/elements/text-editor';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { ReactMarquee } from '@/elements/react-marquee';
+import LiquidBackground from '@/elements/liquid-background';
 
 interface UIElement {
     name: string;
@@ -220,108 +221,12 @@ export default function TextEditor() {
         day: 8
     },
     {
-        name: 'React Motion Marquee',
+        name: 'Liquid Background',
         component: (
-            <ReactMarquee className='select-none text-9xl leading-[100%] text-yellow-300 '
-                gap={80}
-            >
-                <div>{`Hover To Stop`}</div>
-            </ReactMarquee>
+            <LiquidBackground />
         ),
-        code: `'use client';
-
-import { cn } from '@/lib/utils';
-import { useMotionValue, animate, motion } from 'motion/react';
-import { useState, useEffect } from 'react';
-import useMeasure from 'react-use-measure';
-
-export type InfiniteSliderProps = {
-  children: React.ReactNode;
-  gap?: number;
-  duration?: number;
-  direction?: 'horizontal' | 'vertical';
-  reverse?: boolean;
-  className?: string;
-};
-
-export function ReactMarquee({
-  children,
-  gap = 16,
-  duration = 25,
-  direction = 'horizontal',
-  reverse = false,
-  className,
-}: InfiniteSliderProps) {
-  const [ref, { width, height }] = useMeasure();
-  const translation = useMotionValue(0);
-  const [isPaused, setIsPaused] = useState(false);
-
-  useEffect(() => {
-    let controls;
-    const size = direction === 'horizontal' ? width : height;
-    const contentSize = size + gap;
-    const from = reverse ? -contentSize / 2 : 0;
-    const to = reverse ? 0 : -contentSize / 2;
-
-    if (!isPaused) {
-      // Get current position
-      const currentPosition = translation.get();
-      
-      // Calculate remaining distance and duration
-      const remainingDistance = Math.abs(to - currentPosition);
-      const fullDistance = Math.abs(to - from);
-      const remainingDuration = (remainingDistance / fullDistance) * duration;
-
-      controls = animate(translation, to, {
-        ease: 'linear',
-        duration: remainingDuration,
-        repeat: Infinity,
-        repeatType: 'loop',
-        repeatDelay: 0,
-        onRepeat: () => {
-          translation.set(from);
-        },
-      });
-    }
-
-    return () => controls?.stop();
-  }, [
-    translation,
-    duration,
-    width,
-    height,
-    gap,
-    direction,
-    reverse,
-    isPaused,
-  ]);
-
-  const hoverProps = {
-    onHoverStart: () => setIsPaused(true),
-    onHoverEnd: () => setIsPaused(false),
-  };
-
-  return (
-    <div className={cn('overflow-hidden', className)}>
-      <motion.div
-        className="flex w-max"
-        style={{
-          ...(direction === 'horizontal'
-            ? { x: translation }
-            : { y: translation }),
-          gap: \`\$\{gap\}px\`,
-          flexDirection: direction === 'horizontal' ? 'row' : 'column',
-        }}
-        ref={ref}
-        {...hoverProps}
-      >
-        {children}
-        {children}
-      </motion.div>
-    </div>
-  );
-}`,
-        day: 13
+        code: ``,
+        day: 14
     },
 ];
 
@@ -357,38 +262,39 @@ const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
                     <Tabs defaultValue="preview" className="w-full">
                         <TabsList>
                             <TabsTrigger value="preview">Preview</TabsTrigger>
-                            <TabsTrigger value="code">Code</TabsTrigger>
+                            {element.code === '' ? null : <TabsTrigger value="code">Code</TabsTrigger>}
                         </TabsList>
-                        <TabsContent value="preview" className="p-4 border rounded">
+                        <TabsContent value="preview" className="p-4 min-h-full border rounded">
                             {element.component}
                         </TabsContent>
-                        <TabsContent value="code" className="p-4 border rounded">
-                            <div className="relative">
-                                <button
-                                    onClick={() => handleCopy(element.code, index)}
-                                    className="absolute right-2 top-2 z-[100] p-2 rounded bg-opacity-60 bg-white hover:bg-gray-200 transition-colors"
-                                    aria-label="Copy code"
-                                >
-                                    {copiedIndex === index ? (
-                                        <Check className="h-4 w-4 text-green-500" />
-                                    ) : (
-                                        <Copy className="h-4 w-4" />
-                                    )}
-                                </button>
-                                <div className="relative z-0">
-                                    <CodeMirror
-                                        value={element.code}
-                                        height="100%"  // adjust height as needed
-                                        extensions={[javascript({ jsx: true })]}
-                                        readOnly={true}
-                                        basicSetup={{
-                                            lineNumbers: true,
-                                            highlightActiveLine: true,
-                                        }}
-                                    />
+                        {element.code === '' ? null :
+                            <TabsContent value="code" className="p-4 border rounded">
+                                <div className="relative">
+                                    <button
+                                        onClick={() => handleCopy(element.code, index)}
+                                        className="absolute right-2 top-2 z-[100] p-2 rounded bg-opacity-60 bg-white hover:bg-gray-200 transition-colors"
+                                        aria-label="Copy code"
+                                    >
+                                        {copiedIndex === index ? (
+                                            <Check className="h-4 w-4 text-green-500" />
+                                        ) : (
+                                            <Copy className="h-4 w-4" />
+                                        )}
+                                    </button>
+                                    <div className="relative z-0">
+                                        <CodeMirror
+                                            value={element.code}
+                                            height="100%"  // adjust height as needed
+                                            extensions={[javascript({ jsx: true })]}
+                                            readOnly={true}
+                                            basicSetup={{
+                                                lineNumbers: true,
+                                                highlightActiveLine: true,
+                                            }}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        </TabsContent>
+                            </TabsContent>}
 
                     </Tabs>
                 </div>
