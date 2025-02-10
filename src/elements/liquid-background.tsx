@@ -5,12 +5,11 @@ export default function LiquidBackground() {
 
     return (
         <>
-            <div className="w-full object-contai">
+            <div className="aspect-square">
                 <iframe
                     src="https://unicorn.studio/embed/TgBHx1wChujEYosGQB9T"
-                    height={600}
                     width="100%"
-                    className="overflow-hidden object-cover"
+                    className="aspect-square overflow-hidden object-cover"
                     loading="lazy"
                 ></iframe>
             </div>
