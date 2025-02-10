@@ -37,7 +37,6 @@ const ProjectPagination: React.FC<ProjectPaginationProps> = ({
         e.preventDefault();
         if (page >= 1 && page <= totalPages) {
             onPageChange(page);
-            // Update URL with the new page number
             const url = new URL(window.location.href);
             url.searchParams.set('page', page.toString());
             router.push(url.pathname + url.search);
@@ -85,7 +84,6 @@ const ProjectPagination: React.FC<ProjectPaginationProps> = ({
 export const PaginatedProjects: React.FC<PaginatedProjectsProps> = ({ projects }) => {
     const searchParams = useSearchParams();
     const [currentPage, setCurrentPage] = useState<number>(() => {
-        // Initialize from URL search params if available, otherwise default to 1
         const pageParam = searchParams.get('page');
         const parsedPage = pageParam ? parseInt(pageParam, 10) : 1;
         return isNaN(parsedPage) ? 1 : parsedPage;
@@ -93,7 +91,6 @@ export const PaginatedProjects: React.FC<PaginatedProjectsProps> = ({ projects }
 
     const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
 
-    // Ensure current page is valid when projects length changes
     useEffect(() => {
         if (currentPage > totalPages) {
             setCurrentPage(1);
@@ -109,7 +106,7 @@ export const PaginatedProjects: React.FC<PaginatedProjectsProps> = ({ projects }
 
     return (
         <>
-            <section className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 justify-items-center">
+            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 justify-items-center">
                 {currentProjects.map((project) => (
                     <ProjectCard key={project.day} project={project} />
                 ))}
