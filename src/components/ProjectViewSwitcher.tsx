@@ -71,7 +71,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
 
   return (
     <div className="space-y-6">
-      <div className={`flex  items-center px-4 ${viewMode === 'paginated' ? 'justify-between' : 'justify-end'}`}>
+      <div className={`flex  px-4 ${viewMode === 'paginated' ? 'flex-col-reverse gap-2 items-end md:flex-row justify-stretch md:justify-between' : 'justify-end'}`}>
         {viewMode === 'paginated' && (
           <Button
             variant="outline"
@@ -82,7 +82,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
             <span>Sort Days: {sortOrder === 'asc' ? 'Earliest First' : 'Latest First'}</span>
           </Button>
         )}
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 justify-end">
           <Button
             variant={viewMode === 'paginated' ? 'default' : 'outline'}
             onClick={() => setViewMode('paginated')}
