@@ -68,6 +68,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
     );
   };
 
+
   return (
     <div className="space-y-6">
       <div className={`flex  items-center px-4 ${viewMode === 'paginated' ? 'justify-between' : 'justify-end'}`}>
