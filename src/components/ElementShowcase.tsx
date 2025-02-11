@@ -6,8 +6,7 @@ import TextEditor from '@/elements/text-editor';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { ReactMarquee } from '@/elements/react-marquee';
-import LiquidBackground from '@/elements/liquid-background';
-import HologramMaze from '@/elements/hologram-maze';
+import UnicornStudioWrapper from '@/elements/unicorn-studio-wrapper';
 interface UIElement {
     name: string;
     component: JSX.Element;
@@ -323,7 +322,7 @@ export function ReactMarquee({
     {
         name: 'Liquid Background',
         component: (
-            <LiquidBackground />
+            <UnicornStudioWrapper link='https://unicorn.studio/embed/TgBHx1wChujEYosGQB9T' />
         ),
         code: ``,
         day: 14
@@ -331,10 +330,19 @@ export function ReactMarquee({
     {
         name: 'Hologram Maze',
         component: (
-            <HologramMaze />
+            <UnicornStudioWrapper link='https://unicorn.studio/embed/hLbQnQvUF2Bw1kf3TyUl' />
+
         ),
         code: ``,
         day: 16
+    },
+    {
+        name: 'Glyph Dither Spiral',
+        component: (
+            <UnicornStudioWrapper link='https://unicorn.studio/embed/uNJXDVOH11hlwxFNGqoT' />
+        ),
+        code: ``,
+        day: 17
     },
 ];
 
