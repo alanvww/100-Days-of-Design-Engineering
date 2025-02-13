@@ -7,7 +7,7 @@ export function Footer() {
             <hr></hr>
             <div className='mx-auto flex max-w-7xl flex-col justify-center px-6 pb-4 pt-12 md:flex-row md:justify-between md:px-8'>
                 <p className='text-sm text-zinc-500'>
-                    © {new Date().getFullYear()} Made with ❤️ by <a href='https://alan.ooo' className='underline'>Alan Ren</a>
+                    Made with ❤️ by <a href='https://alan.ooo' className='underline'>Alan Ren</a> © {new Date().getFullYear()} 
                 </p>
                 <div className='order-first mb-4 flex items-center gap-x-6 md:order-none md:mb-0'>
                     <a

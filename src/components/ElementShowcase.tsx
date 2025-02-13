@@ -702,11 +702,17 @@ export default function ReactStepper() {
         </div>
     );
 }
-
-        
         `,
         day: 18
     },
+    {
+      name: 'Noise',
+      component: (
+          <UnicornStudioWrapper link='https://unicorn.studio/embed/X8aeQ4jq06VrHgiSb0k8' />
+      ),
+      code: ``,
+      day: 19
+  },
 ];
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
