@@ -23,7 +23,7 @@ interface PaginatedProjectsProps {
     projects: Project[];
 }
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 12;
 
 const ProjectPagination: React.FC<ProjectPaginationProps> = ({
     currentPage,
