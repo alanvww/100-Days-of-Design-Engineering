@@ -71,7 +71,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
 
   return (
     <div className="space-y-6">
-      <div className={`flex  px-4 ${viewMode === 'paginated' ? 'flex-col-reverse gap-2 items-end md:flex-row justify-stretch md:justify-between' : 'justify-end'}`}>
+      <div className={`flex px-8 ${viewMode === 'paginated' ? 'flex-col-reverse gap-2  items-end md:flex-row justify-stretch md:justify-between' : 'justify-end'}`}>
         {viewMode === 'paginated' && (
           <Button
             variant="outline"

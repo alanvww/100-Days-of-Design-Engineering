@@ -32,7 +32,7 @@ const isExternalLink = (href: string) => {
 
 export function Navbar() {
     return (
-        <div className="max-w-7xl mx-2 md:mx-0">
+        <nav className="max-w-7xl px-2 md:px-8 md:mx-0">
             <div className="w-full max-w-fit rounded-xl border border-zinc-200 p-1 dark:border-zinc-800">
                 <div className="flex overflow-x-auto">
                     <AnimatedBackground
@@ -73,6 +73,6 @@ export function Navbar() {
                     </AnimatedBackground>
                 </div>
             </div>
-        </div>
+        </nav>
     );
 }

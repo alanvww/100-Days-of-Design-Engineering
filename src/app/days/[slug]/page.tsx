@@ -55,7 +55,7 @@ export default async function DayPage({ params }: PageProps) {
                     </div>
                     {/* Foreground title */}
                     <div className="relative md:my-32 my-20 w-3/4">
-                        <h1 className="text-3xl md:text-8xl  text-left text-gray-700 bg-blend-multiply">
+                        <h1 className="text-3xl md:text-8xl  text-left text-gray-700 bg-blend-multiply px-2 md:px-8">
                             Day {slug}: {project?.title}
                         </h1>
                     </div>

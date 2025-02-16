@@ -10,71 +10,71 @@ import UnicornStudioWrapper from '@/elements/unicorn-studio-wrapper';
 import ReactStepper from '@/elements/react-stepper';
 
 interface UIElement {
-    name: string;
-    component: JSX.Element;
-    code: string;
-    day: number;
+  name: string;
+  component: JSX.Element;
+  code: string;
+  day: number;
 }
 
 interface ElementShowcaseProps {
-    day: number;
+  day: number;
 }
 
 const elements: UIElement[] = [
-    {
-        name: 'Primary Button',
-        component: (
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Primary Button
-            </button>
-        ),
-        code: `<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+  {
+    name: 'Primary Button',
+    component: (
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Primary Button
+      </button>
+    ),
+    code: `<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
   Primary Button
 </button>`,
-        day: 7
-    },
-    {
-        name: 'Secondary Button',
-        component: (
-            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
-                Secondary Button
-            </button>
-        ),
-        code: `<button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+    day: 7
+  },
+  {
+    name: 'Secondary Button',
+    component: (
+      <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+        Secondary Button
+      </button>
+    ),
+    code: `<button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
   Secondary Button
 </button>`,
-        day: 7
-    },
-    {
-        name: 'Outline Button',
-        component: (
-            <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                Outline Button
-            </button>
-        ),
-        code: `<button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+    day: 7
+  },
+  {
+    name: 'Outline Button',
+    component: (
+      <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+        Outline Button
+      </button>
+    ),
+    code: `<button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
   Outline Button
 </button>`,
-        day: 7
-    },
-    {
-        name: 'Disabled Button',
-        component: (
-            <button className="bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded cursor-not-allowed" disabled>
-                Disabled Button
-            </button>
-        ),
-        code: `<button className="bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded cursor-not-allowed" disabled>
+    day: 7
+  },
+  {
+    name: 'Disabled Button',
+    component: (
+      <button className="bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded cursor-not-allowed" disabled>
+        Disabled Button
+      </button>
+    ),
+    code: `<button className="bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded cursor-not-allowed" disabled>
   Disabled Button
 </button>`,
-        day: 7
-    },
-    {
-        name: 'Text Editor',
-        component: (
-            <TextEditor />
-        ),
-        code: `"use client"
+    day: 7
+  },
+  {
+    name: 'Text Editor',
+    component: (
+      <TextEditor />
+    ),
+    code: `"use client"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -219,14 +219,14 @@ export default function TextEditor() {
 }
 
 `,
-        day: 8
-    },
-    {
-        name: 'React Marquee',
-        component: (
-            <ReactMarquee className='text-6xl text-yellow-300'>Sample Content Hover to Stop </ReactMarquee>
-        ),
-        code: `'use client';
+    day: 8
+  },
+  {
+    name: 'React Marquee',
+    component: (
+      <ReactMarquee className='text-6xl text-yellow-300'>Sample Content Hover to Stop </ReactMarquee>
+    ),
+    code: `'use client';
 
 import { cn } from '@/lib/utils';
 import { useMotionValue, animate, motion, AnimationPlaybackControls } from 'motion/react';
@@ -319,39 +319,39 @@ export function ReactMarquee({
     </div>
   );
 }`,
-        day: 13
-    },
-    {
-        name: 'Liquid Background',
-        component: (
-            <UnicornStudioWrapper link='https://unicorn.studio/embed/TgBHx1wChujEYosGQB9T' />
-        ),
-        code: ``,
-        day: 14
-    },
-    {
-        name: 'Hologram Maze',
-        component: (
-            <UnicornStudioWrapper link='https://unicorn.studio/embed/hLbQnQvUF2Bw1kf3TyUl' />
+    day: 13
+  },
+  {
+    name: 'Liquid Background',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/TgBHx1wChujEYosGQB9T' />
+    ),
+    code: ``,
+    day: 14
+  },
+  {
+    name: 'Hologram Maze',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/hLbQnQvUF2Bw1kf3TyUl' />
 
-        ),
-        code: ``,
-        day: 16
-    },
-    {
-        name: 'Glyph Dither Spiral',
-        component: (
-            <UnicornStudioWrapper link='https://unicorn.studio/embed/uNJXDVOH11hlwxFNGqoT' />
-        ),
-        code: ``,
-        day: 17
-    },
-    {
-        name: 'Stepper',
-        component: (
-            <ReactStepper />
-        ),
-        code: `
+    ),
+    code: ``,
+    day: 16
+  },
+  {
+    name: 'Glyph Dither Spiral',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/uNJXDVOH11hlwxFNGqoT' />
+    ),
+    code: ``,
+    day: 17
+  },
+  {
+    name: 'Stepper',
+    component: (
+      <ReactStepper />
+    ),
+    code: `
 // stepper.tsx
 "use client";
 
@@ -696,96 +696,101 @@ export default function ReactStepper() {
                     Next step
                 </Button>
             </div>
-            <p className="mt-2 text-xs text-muted-foreground" role="region" aria-live="polite">
-                Controlled vertical stepper with checkmarks
-            </p>
         </div>
     );
 }
         `,
-        day: 18
-    },
-    {
-      name: 'Noise',
-      component: (
-          <UnicornStudioWrapper link='https://unicorn.studio/embed/X8aeQ4jq06VrHgiSb0k8' />
-      ),
-      code: ``,
-      day: 19
+    day: 18
+  },
+  {
+    name: 'Noise',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/X8aeQ4jq06VrHgiSb0k8' />
+    ),
+    code: ``,
+    day: 19
+  },
+  {
+    name: 'Text Dissolve',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/UKHV7zJt78QVovO0SWKR' />
+    ),
+    code: ``,
+    day: 22
   },
 ];
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
-    const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
-    const handleCopy = async (code: string, index: number) => {
-        try {
-            await navigator.clipboard.writeText(code);
-            setCopiedIndex(index);
-            setTimeout(() => {
-                setCopiedIndex(null);
-            }, 2000);
-        } catch (err) {
-            console.error('Failed to copy:', err);
-        }
-    };
-
-    // Filter elements based on the day parameter
-    const filteredElements = elements.filter(element => element.day === day);
-
-    // If no elements found for the given day, show a message
-    if (filteredElements.length === 0) {
-        return (
-            <></>
-        );
+  const handleCopy = async (code: string, index: number) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedIndex(index);
+      setTimeout(() => {
+        setCopiedIndex(null);
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
     }
+  };
 
+  // Filter elements based on the day parameter
+  const filteredElements = elements.filter(element => element.day === day);
+
+  // If no elements found for the given day, show a message
+  if (filteredElements.length === 0) {
     return (
-        <div className="p-4">
-            {filteredElements.map((element, index) => (
-                <div key={index} className="mb-8">
-                    <Tabs defaultValue="preview" className="w-full">
-                        <TabsList>
-                            <TabsTrigger value="preview">Preview</TabsTrigger>
-                            {element.code === '' ? null : <TabsTrigger value="code">Code</TabsTrigger>}
-                        </TabsList>
-                        <TabsContent value="preview" className="p-4 min-h-full border rounded">
-                            {element.component}
-                        </TabsContent>
-                        {element.code === '' ? null :
-                            <TabsContent value="code" className="p-4 border rounded">
-                                <div className="relative">
-                                    <button
-                                        onClick={() => handleCopy(element.code, index)}
-                                        className="absolute right-2 top-2 z-[100] p-2 rounded bg-opacity-60 bg-white hover:bg-gray-200 transition-colors"
-                                        aria-label="Copy code"
-                                    >
-                                        {copiedIndex === index ? (
-                                            <Check className="h-4 w-4 text-green-500" />
-                                        ) : (
-                                            <Copy className="h-4 w-4" />
-                                        )}
-                                    </button>
-                                    <div className="relative z-0">
-                                        <CodeMirror
-                                            value={element.code}
-                                            height="100%"  // adjust height as needed
-                                            extensions={[javascript({ jsx: true })]}
-                                            readOnly={true}
-                                            basicSetup={{
-                                                lineNumbers: true,
-                                                highlightActiveLine: true,
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            </TabsContent>}
-
-                    </Tabs>
-                </div>
-            ))}
-        </div>
+      <></>
     );
+  }
+
+  return (
+    <div className="p-4">
+      {filteredElements.map((element, index) => (
+        <div key={index} className="mb-8">
+          <Tabs defaultValue="preview" className="w-full">
+            <TabsList>
+              <TabsTrigger value="preview">Preview</TabsTrigger>
+              {element.code === '' ? null : <TabsTrigger value="code">Code</TabsTrigger>}
+            </TabsList>
+            <TabsContent value="preview" className="p-4 min-h-full border rounded">
+              {element.component}
+            </TabsContent>
+            {element.code === '' ? null :
+              <TabsContent value="code" className="p-4 border rounded">
+                <div className="relative">
+                  <button
+                    onClick={() => handleCopy(element.code, index)}
+                    className="absolute right-2 top-2 z-[100] p-2 rounded bg-opacity-60 bg-white hover:bg-gray-200 transition-colors"
+                    aria-label="Copy code"
+                  >
+                    {copiedIndex === index ? (
+                      <Check className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </button>
+                  <div className="relative z-0">
+                    <CodeMirror
+                      value={element.code}
+                      height="100%"  // adjust height as needed
+                      extensions={[javascript({ jsx: true })]}
+                      readOnly={true}
+                      basicSetup={{
+                        lineNumbers: true,
+                        highlightActiveLine: true,
+                      }}
+                    />
+                  </div>
+                </div>
+              </TabsContent>}
+
+          </Tabs>
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default ElementShowcase;
