@@ -1,6 +1,6 @@
 import AnimatedBackground from './animated-background';
 import { ExternalLink } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from 'next-view-transitions'
 
 const NAVIGATION_ITEMS = [
     {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTransitionRouter } from 'next-view-transitions'
 import { Project } from "@/types/ProjectTypes";
 import { ProjectCard } from "./ProjectCard";
 import {
@@ -30,7 +31,7 @@ const ProjectPagination: React.FC<ProjectPaginationProps> = ({
     totalPages,
     onPageChange
 }) => {
-    const router = useRouter();
+    const router = useTransitionRouter();
     const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     const handlePageClick = (e: React.MouseEvent<HTMLAnchorElement>, page: number) => {
