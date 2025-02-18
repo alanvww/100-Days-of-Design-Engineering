@@ -5,6 +5,9 @@ import { Navbar } from '@/components/ui/Navbar';
 import { Footer } from '@/components/ui/Footer';
 import MarkdownContent from '@/components/MarkdownContent';
 import ElementShowcase from '@/components/ElementShowcase';
+import { Suspense } from 'react';
+import Loading from './loading';
+import { ProjectFrontmatter } from '@/lib/markdown';
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -21,6 +24,54 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: `Day ${slug} - Design Engineering`,
         description: `Design engineering project for day ${slug}`,
     };
+}
+
+function PageContent({
+    slug,
+    project,
+    content,
+    dayNumber
+}: {
+    slug: string;
+    project: ProjectFrontmatter;
+    content: string;
+    dayNumber: number;
+}) {
+    return (
+        <div className="min-h-screen flex flex-col">
+            <main className="flex-1 container mx-auto px-4 py-8 sm:py-16">
+                <div className="relative">
+                    <Navbar />
+                    {/* Background project name */}
+                    <div className="absolute left-0 w-full overflow-hidden select-none pointer-events-none">
+                        <div
+                            className="md:text-[8rem] text-right my-14 text-[3rem] opacity-15 text-gray-600 tracking-tight leading-none"
+                            style={{ color: project?.color }}
+                        >
+                            {project?.project}
+                        </div>
+                    </div>
+                    {/* Foreground title */}
+                    <div className="relative md:my-32 my-20 w-3/4">
+                        <h1 className="text-3xl md:text-8xl text-left text-gray-700 bg-blend-multiply px-2 md:px-8">
+                            Day {slug}: {project?.title}
+                        </h1>
+                    </div>
+                </div>
+                <article className="max-w-4xl mx-auto px-4 mt-16">
+                    <MarkdownContent
+                        content={content ? content : ''}
+                        className="prose-headings:scroll-mt-20"
+                    />
+                    {/* Element Showcase */}
+                    <div className="mt-16">
+                        <ElementShowcase day={dayNumber} />
+                    </div>
+                </article>
+            </main>
+            <Footer />
+        </div>
+    );
 }
 
 export default async function DayPage({ params }: PageProps) {
@@ -40,38 +91,14 @@ export default async function DayPage({ params }: PageProps) {
     }
 
     return (
-        <div className="min-h-screen flex flex-col">
-            <main className="flex-1 container mx-auto px-4 py-8 sm:py-16">
-                <div className="relative">
-                    <Navbar />
-                    {/* Background project name */}
-                    <div className="absolute left-0 w-full overflow-hidden select-none pointer-events-none">
-                        <div
-                            className="md:text-[8rem] text-right my-14 text-[3rem]  opacity-15 text-gray-600 tracking-tight leading-none"
-                            style={{ color: project?.color }}
-                        >
-                            {project?.project}
-                        </div>
-                    </div>
-                    {/* Foreground title */}
-                    <div className="relative md:my-32 my-20 w-3/4">
-                        <h1 className="text-3xl md:text-8xl  text-left text-gray-700 bg-blend-multiply px-2 md:px-8">
-                            Day {slug}: {project?.title}
-                        </h1>
-                    </div>
-                </div>
-                <article className="max-w-4xl mx-auto px-4 mt-16">
-                    <MarkdownContent
-                        content={content? content : ''}
-                        className="prose-headings:scroll-mt-20"
-                    />
-                    {/* Element Showcase */}
-                    <div className="mt-16">
-                        <ElementShowcase day={dayNumber} />
-                    </div>
-                </article>
-            </main>
-            <Footer />
-        </div>
+
+        <Suspense fallback={<Loading />}>
+            {(project && content) ? <PageContent
+                slug={slug}
+                project={project}
+                content={content}
+                dayNumber={dayNumber}
+            /> : <Loading />}
+        </Suspense>
     );
 }
