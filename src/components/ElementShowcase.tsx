@@ -788,7 +788,15 @@ const PanelReveal = () => {
 
 export default PanelReveal;`,
     day: 23
-  }
+  },
+  {
+    name: 'Noise Blur',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/otPVi2FyRNrmmtT8tQh9' />
+    ),
+    code: ``,
+    day: 25
+  },
 ];
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
