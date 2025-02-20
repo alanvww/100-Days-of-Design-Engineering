@@ -10,7 +10,7 @@ import {
 } from 'motion/react';
 import React from 'react';
 
-export type PresetType = 'blur' | 'fade-in-blur' | 'scale' | 'fade' | 'slide';
+export type PresetType = 'blur-sm' | 'fade-in-blur' | 'scale' | 'fade' | 'slide';
 
 export type PerType = 'word' | 'char' | 'line';
 

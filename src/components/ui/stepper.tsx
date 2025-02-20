@@ -176,7 +176,7 @@ const StepperIndicator = React.forwardRef<HTMLDivElement, StepperIndicatorProps>
                 ref={ref}
                 className={cn(
                     "relative flex size-6 shrink-0 items-center justify-center rounded-full",
-                    "before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-b before:from-theme-green before:to-theme-purple before:opacity-0 hover:before:opacity-20",
+                    "before:absolute before:inset-0 before:rounded-full before:bg-linear-to-b before:from-theme-green before:to-theme-purple before:opacity-0 hover:before:opacity-20",
                     className
                 )}
                 data-state={state}

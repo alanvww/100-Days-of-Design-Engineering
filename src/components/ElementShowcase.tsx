@@ -9,7 +9,7 @@ import { ReactMarquee } from '@/elements/react-marquee';
 import UnicornStudioWrapper from '@/elements/unicorn-studio-wrapper';
 import ReactStepper from '@/elements/react-stepper';
 import PanelReveal from '@/elements/panel-reveal';
-
+import DraggableGrid from '@/elements/draggable-grid';
 interface UIElement {
   name: string;
   component: JSX.Element;
@@ -195,7 +195,7 @@ export default function TextEditor() {
                         type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="w-full px-8 py-4 text-2xl font-semibold bg-transparent border-none focus:outline-none"
+                        className="w-full px-8 py-4 text-2xl font-semibold bg-transparent border-none focus:outline-hidden"
                         placeholder="Document Title"
                     />
 
@@ -204,7 +204,7 @@ export default function TextEditor() {
                             <textarea
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}
-                                className="w-full h-full min-h-[calc(100vh-300px)] resize-none bg-transparent border-none focus:outline-none"
+                                className="w-full h-full min-h-[calc(100vh-300px)] resize-none bg-transparent border-none focus:outline-hidden"
                                 placeholder="Start typing..."
                             />
                         </div>
@@ -532,7 +532,7 @@ const StepperIndicator = React.forwardRef<HTMLDivElement, StepperIndicatorProps>
         ref={ref}
         className={cn(
           "relative flex size-6 shrink-0 items-center justify-center rounded-full",
-          "before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-b before:from-theme-green before:to-theme-purple before:opacity-0 hover:before:opacity-20",
+          "before:absolute before:inset-0 before:rounded-full before:bg-linear-to-b before:from-theme-green before:to-theme-purple before:opacity-0 hover:before:opacity-20",
           className
         )}
         data-state={state}
@@ -653,7 +653,7 @@ export default function ReactStepper() {
         <div className="space-y-8 text-center">
             <Stepper value={currentStep} onValueChange={setCurrentStep} orientation="vertical">
                 {steps.map((step) => (
-                    <StepperItem key={step} step={step} className="[&:not(:last-child)]:flex-1">
+                    <StepperItem key={step} step={step} className="not-last:flex-1">
                         <StepperTrigger asChild>
                             <StepperIndicator>
                                 <span className="transition-all group-data-[loading=true]/step:scale-50 group-data-[state=completed]/step:scale-50 group-data-[loading=true]/step:opacity-0 group-data-[state=completed]/step:opacity-0">
@@ -738,7 +738,7 @@ const PanelReveal = () => {
     >
       {/* Content underneath */}
       <Card className="absolute inset-0 overflow-hidden">
-        <div className="h-full w-full bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500">
+        <div className="h-full w-full bg-linear-to-r from-red-500 via-yellow-500 to-purple-500">
           <div className="p-4 text-white">
             <p className="text-lg font-bold mb-2">Hidden Content</p>
             <p>Hover anywhere to reveal this message!</p>
@@ -797,6 +797,82 @@ export default PanelReveal;`,
     code: ``,
     day: 25
   },
+  {
+    name: 'Draggable Grid',
+    component: (
+      <DraggableGrid />
+    ),
+    code: `import { createSwapy } from 'swapy'
+import { useEffect, useRef, useState } from 'react'
+import { DotsSixVertical } from '@phosphor-icons/react'
+
+export default function DraggableGrid() {
+    const swapy = useRef<ReturnType<typeof createSwapy> | null>(null)
+    const container = useRef(null)
+
+    const [pressedStates, setPressedStates] = useState({
+        elementA: false,
+        elementB: false,
+        elementC: false
+    });
+
+    // Handler factory function to update specific element
+    const handleMouseEvents = (elementId: string) => ({
+        onMouseDown: () => setPressedStates(prev => ({ ...prev, [elementId]: true })),
+        onMouseUp: () => setPressedStates(prev => ({ ...prev, [elementId]: false })),
+        onMouseLeave: () => setPressedStates(prev => ({ ...prev, [elementId]: false }))
+    });
+
+
+    useEffect(() => {
+        // If container element is loaded
+        if (container.current) {
+            swapy.current = createSwapy(container.current, { animation: 'spring' })
+
+            // Your event listeners
+            swapy.current.onSwap((event) => {
+                console.log('swap', event);
+            })
+        }
+
+        return () => {
+            // Destroy the swapy instance on component destroy
+            swapy.current?.destroy()
+        }
+    }, [])
+
+    return (
+        <div className='h-fit'>
+            <div ref={container} className='flex flex-col gap-4 text-white rounded-4xl transition-all duration-300 '>
+                <div data-swapy-slot="a" className='w-full h-64 border rounded-4xl'>
+                    <div  {...handleMouseEvents('elementA')} data-swapy-item="a" className={\`flex items-center justify-center w-full h-full bg-red-500 rounded-4xl border shadow-sm cursor-grab transition-opacity duration-300 \${pressedStates.elementA ? 'opacity-75 scale-90 cursor-grabbing' : ''}\`}>
+                        <DotsSixVertical size={32} />
+                        <div >A</div>
+                    </div>
+                </div>
+
+                <div className='grid grid-cols-2 gap-4'>
+
+                    <div data-swapy-slot="b" className='w-full h-36 border rounded-4xl'>
+                        <div  {...handleMouseEvents('elementB')} data-swapy-item="b" className={\`flex items-center justify-center w-full h-full bg-blue-500 rounded-4xl border shadow-sm cursor-grab transition-opacity duration-300 \${pressedStates.elementB ? 'opacity-75 scale-90 cursor-grabbing' : ''}\`}>
+                            <DotsSixVertical size={32} />
+                            <div >B</div>
+                        </div>
+                    </div>
+
+                    <div data-swapy-slot="c" className='w-full h-36 border rounded-4xl'>
+                        <div  {...handleMouseEvents('elementC')} data-swapy-item="c" className={\`flex items-center justify-center w-full h-full bg-purple-500 rounded-4xl border shadow-sm cursor-grab transition-opacity duration-300 \${pressedStates.elementC ? 'opacity-75 scale-90 cursor-grabbing' : ''}\`}>
+                            <DotsSixVertical size={32} />
+                            <div >C</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}`,
+    day: 26
+  },
 ];
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
@@ -841,7 +917,7 @@ const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
                 <div className="relative">
                   <button
                     onClick={() => handleCopy(element.code, index)}
-                    className="absolute right-2 top-2 z-[100] p-2 rounded bg-opacity-60 bg-white hover:bg-gray-200 transition-colors"
+                    className="absolute right-2 top-2 z-100 p-2 rounded bg-opacity-60 bg-white hover:bg-gray-200 transition-colors"
                     aria-label="Copy code"
                   >
                     {copiedIndex === index ? (
