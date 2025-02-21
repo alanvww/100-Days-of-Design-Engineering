@@ -67,7 +67,7 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project }) => {
                     />
                     <div className="group absolute inset-0 bg-transparent hover:bg-gray-800/70 transition-all duration-300">
                         <div className="p-3 h-full flex flex-col justify-between">
-                            <span className="text-md text-white bg-opacity-65 bg-gray-900 rounded-full w-fit px-3 py-2">
+                            <span className="text-md text-white bg-gray-900/60 rounded-full w-fit px-3 py-2">
                                 Day {project.day}
                             </span>
                             <span className="text-lg sm:text-xl text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">

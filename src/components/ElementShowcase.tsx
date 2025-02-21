@@ -917,7 +917,7 @@ const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
                 <div className="relative">
                   <button
                     onClick={() => handleCopy(element.code, index)}
-                    className="absolute right-2 top-2 z-100 p-2 rounded bg-opacity-60 bg-white hover:bg-gray-200 transition-colors"
+                    className="absolute right-2 top-2 z-100 p-2 rounded bg-white/60 hover:bg-gray-200/60 transition-colors"
                     aria-label="Copy code"
                   >
                     {copiedIndex === index ? (

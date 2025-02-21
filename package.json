@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "packageManager": "bun@1.2.2",
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.3",
     "@phosphor-icons/react": "^2.1.7",
