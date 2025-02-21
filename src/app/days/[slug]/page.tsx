@@ -45,7 +45,7 @@ function PageContent({
                     {/* Background project name */}
                     <div className="absolute left-0 w-full overflow-hidden select-none pointer-events-none">
                         <div
-                            className="md:text-[8rem] text-right my-14 text-[3rem] text-gray-600/15 tracking-tight leading-none"
+                            className="md:text-[8rem] text-right my-14 text-[3rem] text-gray-600 opacity-15 tracking-tight leading-none"
                             style={{ color: project?.color }}
                         >
                             {project?.project}
