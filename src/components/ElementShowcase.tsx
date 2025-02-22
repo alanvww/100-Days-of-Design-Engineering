@@ -1141,7 +1141,7 @@ const ContactCardLayout: React.FC<ContactCardProps> = ({
 
 export default function ContactCard() {
     return (
-        <div className='flex space-x-8 flex-row justify-center m-auto my-6'>
+        <div className='flex flex-col space-x-8 space-y-3 md:flex-row justify-center m-auto my-6'>
             <ContactCardLayout {...contactData} />
             <ContactCardLayout {...secondContact} />
         </div>
