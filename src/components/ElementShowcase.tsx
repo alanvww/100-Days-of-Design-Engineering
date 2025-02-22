@@ -11,6 +11,7 @@ import ReactStepper from '@/elements/react-stepper';
 import PanelReveal from '@/elements/panel-reveal';
 import DraggableGrid from '@/elements/draggable-grid';
 import ContactCard from '@/elements/contact-card';
+import FeedbackBar from '@/elements/feedback-bar';
 interface UIElement {
   name: string;
   component: JSX.Element;
@@ -1150,6 +1151,15 @@ export default function ContactCard() {
 
 `,
     day: 27
+  },
+  {
+    name: 'Feedback Bar',
+    component: (
+
+      <div className='flex flex-col space-y-6 justify-center items-center'> <FeedbackBar /> <FeedbackBar /></div>
+    ),
+    code: ``,
+    day: 28
   },
 ];
 
