@@ -1161,6 +1161,14 @@ export default function ContactCard() {
     code: ``,
     day: 28
   },
+  {
+    name: '🧊',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/huoUU3sgKs2g6dx8GVaq' />
+    ),
+    code: ``,
+    day: 29
+  },
 ];
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
@@ -1194,8 +1202,8 @@ const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
         <div key={index} className="mb-8">
           <Tabs defaultValue="preview" className="w-full">
             <TabsList>
-              <TabsTrigger value="preview">Preview</TabsTrigger>
-              {element.code === '' ? null : <TabsTrigger value="code">Code</TabsTrigger>}
+              <TabsTrigger value="preview" className='cursor-pointer'>Preview</TabsTrigger>
+              {element.code === '' ? null : <TabsTrigger value="code" className='cursor-pointer'>Code</TabsTrigger>}
             </TabsList>
             <TabsContent value="preview" className="p-4 min-h-full border rounded">
               {element.component}

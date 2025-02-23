@@ -21,7 +21,7 @@ const NAVIGATION_ITEMS = [
     {
         id: 'contact',
         label: 'Contact',
-        href: '/contact',
+        href: 'https://socials.alan.ooo/',
     },
 ];
 
@@ -58,7 +58,7 @@ export function Navbar() {
                                 >
                                     <button
                                         type="button"
-                                        className="group px-3 py-2 text-sm text-zinc-600 transition-colors duration-300 hover:text-zinc-950 data-[checked=true]:text-black dark:text-zinc-400 dark:hover:text-zinc-50 dark:data-[checked=true]:text-white"
+                                        className="group px-3 py-2 text-sm text-zinc-600 transition-colors duration-300 hover:text-zinc-950 data-[checked=true]:text-black dark:text-zinc-400 dark:hover:text-zinc-50 dark:data-[checked=true]:text-white cursor-pointer"
                                     >
                                         {label}
                                         {isExternal && (
