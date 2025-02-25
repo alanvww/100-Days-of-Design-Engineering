@@ -1375,6 +1375,14 @@ export default function ContactCard() {
     }`,
     day: 30
   },
+  {
+    name: 'Replicate',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/libGr2biSIITFd2EKHAJ' />
+    ),
+    code: ``,
+    day: 31
+  },
 ];
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
