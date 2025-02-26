@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransitionRouter } from 'next-view-transitions'
 import { Project } from "@/types/ProjectTypes";
@@ -83,7 +83,8 @@ const ProjectPagination: React.FC<ProjectPaginationProps> = ({
     );
 };
 
-export const PaginatedProjects: React.FC<PaginatedProjectsProps> = ({ projects }) => {
+// Component that uses useSearchParams
+const ProjectPaginator: React.FC<PaginatedProjectsProps> = ({ projects }) => {
     const searchParams = useSearchParams();
     const [currentPage, setCurrentPage] = useState<number>(() => {
         const pageParam = searchParams.get('page');
@@ -157,5 +158,14 @@ export const PaginatedProjects: React.FC<PaginatedProjectsProps> = ({ projects }
                 onPageChange={setCurrentPage}
             />
         </>
+    );
+};
+
+// Main component that wraps the paginator with Suspense
+export const PaginatedProjects: React.FC<PaginatedProjectsProps> = ({ projects }) => {
+    return (
+        <Suspense fallback={<div className="py-10 text-center">Loading projects...</div>}>
+            <ProjectPaginator projects={projects} />
+        </Suspense>
     );
 };
