@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useTransitionRouter } from 'next-view-transitions'
 import { Project } from "@/types/ProjectTypes";
 import { ProjectCard } from "./ProjectCard";
+import { motion } from "motion/react";
 import {
     Pagination,
     PaginationContent,
@@ -105,13 +106,50 @@ export const PaginatedProjects: React.FC<PaginatedProjectsProps> = ({ projects }
     const endIndex = startIndex + ITEMS_PER_PAGE;
     const currentProjects = projects.slice(startIndex, endIndex);
 
+    // Animation variants for staggered grid
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.2
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                type: "spring",
+                stiffness: 300,
+                damping: 24
+            }
+        }
+    };
+
     return (
         <>
-            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 justify-items-center">
-                {currentProjects.map((project) => (
-                    <ProjectCard key={project.day} project={project} />
+            <motion.section 
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 justify-items-center"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                key={currentPage} // Re-animate when page changes
+            >
+                {currentProjects.map((project, index) => (
+                    <motion.div 
+                        key={project.day} 
+                        variants={itemVariants}
+                        custom={index}
+                    >
+                        <ProjectCard project={project} />
+                    </motion.div>
                 ))}
-            </section>
+            </motion.section>
 
             <ProjectPagination
                 currentPage={currentPage}

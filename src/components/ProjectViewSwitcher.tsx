@@ -5,6 +5,7 @@ import { PaginatedProjects } from '@/components/PaginatedProjects';
 import { ProjectCard } from '@/components/ProjectCard';
 import { Button } from '@/components/ui/button';
 import { LayoutGrid, ScrollText, ArrowUpDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface ProjectViewProps {
   projects: Project[];
@@ -43,44 +44,174 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
   };
 
   const CarouselView = () => {
+    // Animation variants for the container of all sections
+    const containerVariants = {
+      hidden: { opacity: 0 },
+      visible: { 
+        opacity: 1,
+        transition: {
+          staggerChildren: 0.6, // Longer delay between groups
+          delayChildren: 0.2,
+          when: "beforeChildren"
+        }
+      }
+    };
+
+    // Animation variants for each section (project type)
+    const sectionVariants = {
+      hidden: { opacity: 0, y: 40 },
+      visible: (i: number) => ({ 
+        opacity: 1, 
+        y: 0,
+        transition: {
+          type: "spring",
+          stiffness: 300,
+          damping: 30,
+          delay: i * 0.2, // Additional delay based on section index
+          staggerChildren: 0.1,
+          when: "beforeChildren"
+        }
+      })
+    };
+
+    // Animation variants for the heading
+    const headingVariants = {
+      hidden: { opacity: 0, x: -30 },
+      visible: { 
+        opacity: 1, 
+        x: 0,
+        transition: { 
+          type: "spring",
+          stiffness: 500,
+          damping: 30,
+          duration: 0.5 
+        }
+      }
+    };
+
+    // Animation variants for the carousel container
+    const carouselVariants = {
+      hidden: { opacity: 0, scale: 0.98 },
+      visible: { 
+        opacity: 1, 
+        scale: 1,
+        transition: {
+          duration: 0.4,
+          staggerChildren: 0.08, // Stagger the appearance of items
+          delayChildren: 0.1
+        }
+      }
+    };
+
+    // Animation variants for each project card
+    const itemVariants = {
+      hidden: { opacity: 0, scale: 0.8, y: 20 },
+      visible: (i: number) => ({ 
+        opacity: 1, 
+        scale: 1,
+        y: 0,
+        transition: {
+          type: "spring",
+          stiffness: 400,
+          damping: 25,
+          delay: i * 0.05 // Additional delay based on item index
+        }
+      })
+    };
+
     return (
-      <div className="space-y-12">
-        {Object.entries(groupedProjects).map(([projectType, projectGroup]) => (
-          <div key={projectType} className="space-y-4">
-            <h2 className="text-2xl font-semibold px-4">{projectType}</h2>
+      <motion.div 
+        className="space-y-16" // Increased spacing between sections
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        {Object.entries(groupedProjects).map(([projectType, projectGroup], sectionIndex) => (
+          <motion.div 
+            key={projectType} 
+            className="space-y-4"
+            variants={sectionVariants}
+            custom={sectionIndex}
+          >
+            <motion.h2 
+              className="text-2xl font-semibold px-4"
+              variants={headingVariants}
+            >
+              {projectType}
+            </motion.h2>
             <div className="relative">
               <div className="scrollbar-none -mx-4 px-4">
-                <div className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4">
-                  {projectGroup.map((project) => (
-                    <div
+                <motion.div 
+                  className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4"
+                  variants={carouselVariants}
+                >
+                  {projectGroup.map((project, index) => (
+                    <motion.div
                       key={project.day}
                       className="flex-none snap-start px-2 first:pl-4 last:pr-4 w-80"
+                      variants={itemVariants}
+                      custom={index}
+                      whileHover={{ 
+                        scale: 1.03, 
+                        transition: { 
+                          type: "spring", 
+                          stiffness: 400, 
+                          damping: 10 
+                        } 
+                      }}
                     >
                       <ProjectCard project={project} />
-                    </div>
+                    </motion.div>
                   ))}
-                </div>
+                </motion.div>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     );
   };
 
+
+  // Animation variants for view transitions
+  const viewTransitionVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.4,
+        ease: "easeInOut"
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      y: -20,
+      transition: {
+        duration: 0.3
+      }
+    }
+  };
 
   return (
     <div className="space-y-6">
       <div className={`flex px-8 ${viewMode === 'paginated' ? 'flex-col-reverse gap-2  items-end md:flex-row justify-stretch md:justify-between' : 'justify-end'}`}>
         {viewMode === 'paginated' && (
-          <Button
-            variant="outline"
-            onClick={toggleSortOrder}
-            className="flex items-center gap-2"
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
           >
-            <ArrowUpDown className="w-4 h-4" />
-            <span>Sort Days: {sortOrder === 'asc' ? 'Earliest First' : 'Latest First'}</span>
-          </Button>
+            <Button
+              variant="outline"
+              onClick={toggleSortOrder}
+              className="flex items-center gap-2"
+            >
+              <ArrowUpDown className="w-4 h-4" />
+              <span>Sort Days: {sortOrder === 'asc' ? 'Earliest First' : 'Latest First'}</span>
+            </Button>
+          </motion.div>
         )}
         <div className="flex space-x-2 justify-end">
           <Button
@@ -101,11 +232,30 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
           </Button>
         </div>
       </div>
-      {viewMode === 'paginated' ? (
-        <PaginatedProjects projects={sortedProjects} />
-      ) : (
-        <CarouselView />
-      )}
+      
+      <AnimatePresence mode="popLayout">
+        {viewMode === 'paginated' ? (
+          <motion.div
+            key="paginated"
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={viewTransitionVariants}
+          >
+            <PaginatedProjects projects={sortedProjects} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="carousel"
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={viewTransitionVariants}
+          >
+            <CarouselView />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Link } from 'next-view-transitions'
 import { Project } from "@/types/ProjectTypes";
 import { Suspense } from "react";
+import { motion } from "motion/react";
 
 // Utility functions for generating color data URL
 const keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -30,14 +31,19 @@ const hexToRGB = (hex: string) => {
 };
 
 const ProjectCardSkeleton = () => (
-    <div className="cursor-pointer px-2 md:px-4 min-w-full w-80 md:w-80">
+    <motion.div 
+        className="cursor-pointer px-2 md:px-4 min-w-full w-80 md:w-80"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+    >
         <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-200 animate-pulse">
             <div className="p-3 h-full flex flex-col justify-between">
                 <div className="text-md bg-gray-300 rounded-full w-24 h-10" />
                 <div className="text-lg sm:text-xl bg-gray-300 w-48 h-8" />
             </div>
         </div>
-    </div>
+    </motion.div>
 );
 
 interface ProjectCardProps {
@@ -49,9 +55,68 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project }) => {
     const rgb = hexToRGB(project.color);
     const blurDataURL = rgbDataURL(rgb.r, rgb.g, rgb.b);
 
+    // Animation variants
+    const cardVariants = {
+        hidden: { 
+            opacity: 0,
+            y: 20,
+            scale: 0.95
+        },
+        visible: { 
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: {
+                type: "spring",
+                stiffness: 400,
+                damping: 30,
+                duration: 0.4
+            }
+        },
+        hover: {
+            scale: 1.05,
+            transition: {
+                type: "spring",
+                stiffness: 400,
+                damping: 20
+            }
+        }
+    };
+
+    const overlayVariants = {
+        rest: { 
+            backgroundColor: "rgba(0, 0, 0, 0)" 
+        },
+        hover: { 
+            backgroundColor: "rgba(31, 41, 55, 0.7)" 
+        }
+    };
+
+    const titleVariants = {
+        rest: { 
+            opacity: 0,
+            y: 10
+        },
+        hover: { 
+            opacity: 1,
+            y: 0,
+            transition: {
+                delay: 0.1,
+                duration: 0.2
+            }
+        }
+    };
+
     return (
         <Link href={`/days/${project.day}`} className="cursor-pointer px-2 md:px-4 min-w-full w-80 md:w-80">
-            <div className="cursor-pointer px-2 md:px-4 min-w-full w-80 md:w-80">
+            <motion.div 
+                className="cursor-pointer px-2 md:px-4 min-w-full w-80 md:w-80"
+                initial="hidden"
+                animate="visible"
+                whileHover="hover"
+                variants={cardVariants}
+                layout
+            >
                 <div className="relative aspect-square overflow-hidden rounded-lg">
                     <Image
                         src={project.image}
@@ -65,18 +130,30 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project }) => {
                         placeholder='blur'
                         blurDataURL={blurDataURL}
                     />
-                    <div className="group absolute inset-0 bg-transparent hover:bg-gray-800/70 transition-all duration-300">
+                    <motion.div 
+                        className="absolute inset-0"
+                        initial="rest"
+                        whileHover="hover"
+                        animate="rest"
+                        variants={overlayVariants}
+                    >
                         <div className="p-3 h-full flex flex-col justify-between">
-                            <span className="text-md text-white bg-gray-900/60 rounded-full w-fit px-3 py-2">
+                            <motion.span 
+                                className="text-md text-white bg-gray-900/60 rounded-full w-fit px-3 py-2"
+                                whileHover={{ scale: 1.05 }}
+                            >
                                 Day {project.day}
-                            </span>
-                            <span className="text-lg sm:text-xl text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            </motion.span>
+                            <motion.span 
+                                className="text-lg sm:text-xl text-white"
+                                variants={titleVariants}
+                            >
                                 {project.title}
-                            </span>
+                            </motion.span>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
-            </div>
+            </motion.div>
         </Link>
     );
 };

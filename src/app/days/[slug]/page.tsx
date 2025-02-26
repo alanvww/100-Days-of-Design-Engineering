@@ -8,6 +8,7 @@ import ElementShowcase from '@/components/ElementShowcase';
 import { Suspense } from 'react';
 import Loading from './loading';
 import { ProjectFrontmatter } from '@/lib/markdown';
+import * as motion from "motion/react-client"
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -43,19 +44,39 @@ function PageContent({
                 <div className="relative">
                     <Navbar />
                     {/* Background project name */}
-                    <div className="absolute left-0 w-full overflow-hidden select-none pointer-events-none">
+                    <motion.div
+                        className="absolute left-0 w-full overflow-hidden select-none pointer-events-none"
+                        initial={{ opacity: 0, x: -50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 30,
+                            delay: 0.1
+                        }}
+                    >
                         <div
                             className="md:text-[8rem] text-right my-14 text-[3rem] text-gray-600 opacity-15 tracking-tight leading-none"
                             style={{ color: project?.color }}
                         >
                             {project?.project}
                         </div>
-                    </div>
+                    </motion.div>
                     {/* Foreground title */}
                     <div className="relative md:my-32 my-20 w-3/4">
-                        <h1 className="text-3xl md:text-8xl text-left text-gray-700 bg-blend-multiply px-2 md:px-8">
+                        <motion.h1
+                            className="text-3xl md:text-8xl text-left text-gray-700 bg-blend-multiply px-2 md:px-8"
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                type: "spring",
+                                stiffness: 400,
+                                damping: 30,
+                                delay: 0.3
+                            }}
+                        >
                             Day {slug}: {project?.title}
-                        </h1>
+                        </motion.h1>
                     </div>
                 </div>
                 <article className="max-w-4xl mx-auto px-4 mt-16">
