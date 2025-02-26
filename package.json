@@ -6,10 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pages:build": "bunx @cloudflare/next-on-pages",
+    "preview": "bun run pages:build && wrangler pages dev",
+    "deploy": "bun run pages:build && wrangler pages deploy"
   },
   "packageManager": "bun@1.2.2",
   "dependencies": {
+    "@cloudflare/next-on-pages": "^1.13.8",
     "@codemirror/lang-javascript": "^6.2.3",
     "@phosphor-icons/react": "^2.1.7",
     "@radix-ui/react-select": "^2.1.6",
