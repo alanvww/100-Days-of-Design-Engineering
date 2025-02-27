@@ -58,12 +58,12 @@ export function Navbar() {
                                 >
                                     <button
                                         type="button"
-                                        className="group px-3 py-2 text-sm text-zinc-600 transition-colors duration-300 hover:text-zinc-950 data-[checked=true]:text-black dark:text-zinc-400 dark:hover:text-zinc-50 dark:data-[checked=true]:text-white cursor-pointer"
+                                        className="group px-3 py-2 text-xs md:text-base text-zinc-600 transition-colors duration-300 hover:text-zinc-950 data-[checked=true]:text-black dark:text-zinc-400 dark:hover:text-zinc-50 dark:data-[checked=true]:text-white cursor-pointer"
                                     >
                                         {label}
                                         {isExternal && (
                                             <ExternalLink
-                                                className="inline-block align-baseline mx-1 h-3 w-3 pt-0.5"
+                                                className="min-[365px]:inline-block hidden align-baseline mx-0.5 pt-0.5 md:mx-1 h-3 w-3 "
                                                 strokeWidth={2}
                                             />)}
                                     </button>
