@@ -31,7 +31,7 @@ const hexToRGB = (hex: string) => {
 };
 
 const ProjectCardSkeleton = () => (
-    <motion.div 
+    <motion.div
         className="cursor-pointer px-2 md:px-4 min-w-full w-80 md:w-80"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -48,21 +48,22 @@ const ProjectCardSkeleton = () => (
 
 interface ProjectCardProps {
     project: Project; // Assuming Project type has a color property of type string
+    className?: string;
 }
 
-const ProjectCardContent: React.FC<ProjectCardProps> = ({ project }) => {
+const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className }) => {
     // Convert hex color to RGB and generate data URL
     const rgb = hexToRGB(project.color);
     const blurDataURL = rgbDataURL(rgb.r, rgb.g, rgb.b);
 
     // Animation variants
     const cardVariants = {
-        hidden: { 
+        hidden: {
             opacity: 0,
             y: 20,
             scale: 0.95
         },
-        visible: { 
+        visible: {
             opacity: 1,
             y: 0,
             scale: 1,
@@ -84,20 +85,20 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project }) => {
     };
 
     const overlayVariants = {
-        rest: { 
-            backgroundColor: "rgba(0, 0, 0, 0)" 
+        rest: {
+            backgroundColor: "rgba(0, 0, 0, 0)"
         },
-        hover: { 
-            backgroundColor: "rgba(31, 41, 55, 0.7)" 
+        hover: {
+            backgroundColor: "rgba(31, 41, 55, 0.7)"
         }
     };
 
     const titleVariants = {
-        rest: { 
+        rest: {
             opacity: 0,
             y: 10
         },
-        hover: { 
+        hover: {
             opacity: 1,
             y: 0,
             transition: {
@@ -108,9 +109,9 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project }) => {
     };
 
     return (
-        <Link href={`/days/${project.day}`} className="cursor-pointer px-2 md:px-4 min-w-full w-80 md:w-80">
-            <motion.div 
-                className="cursor-pointer px-2 md:px-4 min-w-full w-80 md:w-80"
+        <Link href={`/days/${project.day}`} className="cursor-pointer px-2 md:px-4 min-w-full w-60 md:w-80">
+            <motion.div
+                className="cursor-pointer px-2 md:px-4 min-w-full"
                 initial="hidden"
                 animate="visible"
                 whileHover="hover"
@@ -130,7 +131,7 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project }) => {
                         placeholder='blur'
                         blurDataURL={blurDataURL}
                     />
-                    <motion.div 
+                    <motion.div
                         className="absolute inset-0"
                         initial="rest"
                         whileHover="hover"
@@ -138,13 +139,13 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project }) => {
                         variants={overlayVariants}
                     >
                         <div className="p-3 h-full flex flex-col justify-between">
-                            <motion.span 
+                            <motion.span
                                 className="text-md text-white bg-gray-900/60 rounded-full w-fit px-3 py-2"
                                 whileHover={{ scale: 1.05 }}
                             >
                                 Day {project.day}
                             </motion.span>
-                            <motion.span 
+                            <motion.span
                                 className="text-lg sm:text-xl text-white"
                                 variants={titleVariants}
                             >
