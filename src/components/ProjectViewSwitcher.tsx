@@ -4,7 +4,7 @@ import { Project } from '@/types/ProjectTypes';
 import { PaginatedProjects } from '@/components/PaginatedProjects';
 import { ProjectCard } from '@/components/ProjectCard';
 import { Button } from '@/components/ui/button';
-import { LayoutGrid, ScrollText, ArrowUpDown } from 'lucide-react';
+import { SquaresFour, Rows, CaretDown, CaretUp, ArrowsDownUp } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface ProjectViewProps {
@@ -44,10 +44,21 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
   };
 
   const CarouselView = () => {
+    // State to track which project groups are expanded
+    const [expandedGroups, setExpandedGroups] = useState<{ [key: string]: boolean }>({});
+
+    // Toggle expanded state for a specific group
+    const toggleGroupExpansion = (projectType: string) => {
+      setExpandedGroups(prev => ({
+        ...prev,
+        [projectType]: !prev[projectType]
+      }));
+    };
+
     // Animation variants for the container of all sections
     const containerVariants = {
       hidden: { opacity: 0 },
-      visible: { 
+      visible: {
         opacity: 1,
         transition: {
           staggerChildren: 0.6, // Longer delay between groups
@@ -60,8 +71,8 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
     // Animation variants for each section (project type)
     const sectionVariants = {
       hidden: { opacity: 0, y: 40 },
-      visible: (i: number) => ({ 
-        opacity: 1, 
+      visible: (i: number) => ({
+        opacity: 1,
         y: 0,
         transition: {
           type: "spring",
@@ -77,14 +88,14 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
     // Animation variants for the heading
     const headingVariants = {
       hidden: { opacity: 0, x: -30 },
-      visible: { 
-        opacity: 1, 
+      visible: {
+        opacity: 1,
         x: 0,
-        transition: { 
+        transition: {
           type: "spring",
           stiffness: 500,
           damping: 30,
-          duration: 0.5 
+          duration: 0.5
         }
       }
     };
@@ -92,8 +103,8 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
     // Animation variants for the carousel container
     const carouselVariants = {
       hidden: { opacity: 0, scale: 0.98 },
-      visible: { 
-        opacity: 1, 
+      visible: {
+        opacity: 1,
         scale: 1,
         transition: {
           duration: 0.4,
@@ -106,8 +117,8 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
     // Animation variants for each project card
     const itemVariants = {
       hidden: { opacity: 0, scale: 0.8, y: 20 },
-      visible: (i: number) => ({ 
-        opacity: 1, 
+      visible: (i: number) => ({
+        opacity: 1,
         scale: 1,
         y: 0,
         transition: {
@@ -119,56 +130,147 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
       })
     };
 
+    // Grid container variants for expanded view
+    const gridVariants = {
+      collapsed: {
+        height: 0,
+        opacity: 0,
+        transition: {
+          height: { duration: 0.3, ease: "easeInOut" },
+          opacity: { duration: 0.2 }
+        }
+      },
+      expanded: {
+        height: "auto",
+        opacity: 1,
+        transition: {
+          height: { duration: 0.3, ease: "easeInOut" },
+          opacity: { duration: 0.3, delay: 0.1 },
+          staggerChildren: 0.05,
+          delayChildren: 0.1
+        }
+      }
+    };
+
     return (
-      <motion.div 
+      <motion.div
         className="space-y-16" // Increased spacing between sections
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
-        {Object.entries(groupedProjects).map(([projectType, projectGroup], sectionIndex) => (
-          <motion.div 
-            key={projectType} 
-            className="space-y-4"
-            variants={sectionVariants}
-            custom={sectionIndex}
-          >
-            <motion.h2 
-              className="text-2xl font-semibold px-4"
-              variants={headingVariants}
+
+        {Object.entries(groupedProjects).map(([projectType, projectGroup], sectionIndex) => {
+          const isExpanded = expandedGroups[projectType] || false;
+
+          return (
+            <motion.div
+              key={projectType}
+              className="space-y-2 border border-zinc-200 px-2 py-6 rounded-2xl"
+              variants={sectionVariants}
+              custom={sectionIndex}
             >
-              {projectType}
-            </motion.h2>
-            <div className="relative">
-              <div className="scrollbar-none -mx-4 px-4">
-                <motion.div 
-                  className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4"
-                  variants={carouselVariants}
+              <div className="flex justify-between items-center">
+                <motion.h2
+                  className="text-xl sm:text-3xl sm:ml-2 font-light px-6 p-1"
+                  variants={headingVariants}
                 >
-                  {projectGroup.map((project, index) => (
-                    <motion.div
-                      key={project.day}
-                      className="flex-none snap-start px-2 first:pl-4 last:pr-4 w-80"
-                      variants={itemVariants}
-                      custom={index}
-                      whileHover={{ 
-                        scale: 1.03, 
-                        transition: { 
-                          type: "spring", 
-                          stiffness: 400, 
-                          damping: 10 
-                        } 
-                      }}
-                    >
-                      <ProjectCard project={project} />
-                    </motion.div>
-                  ))}
-                </motion.div>
+                  {projectType}
+                </motion.h2>
+                <motion.button
+                  className="hidden sm:flex mr-6 py-1 px-3 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-sm items-center gap-1 transition-colors"
+                  onClick={() => toggleGroupExpansion(projectType)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {isExpanded ? (
+                    <>
+                      <span>Collapse</span>
+                      <CaretUp size={16} />
+                    </>
+                  ) : (
+                    <>
+                      <span>View All</span>
+                      <CaretDown size={16} />
+
+                    </>
+                  )}
+                </motion.button>
               </div>
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+
+              <AnimatePresence mode="sync">
+
+                {/* Carousel view (shown when not expanded) */}
+                {!isExpanded && (
+                  <div className="relative" key="carousel">
+                    <div className="absolute left-0 top-0 bottom-0 w-3 md:w-9 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none"></div>
+                    <div className="scrollbar-none -mx-4 px-4">
+                      <motion.div
+                        className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4"
+                        variants={carouselVariants}
+                      >
+                        {projectGroup.map((project, index) => (
+                          <motion.div
+                            key={project.day}
+                            className="flex-none snap-start px-2 w-80"
+                            variants={itemVariants}
+                            custom={index}
+                            whileHover={{
+                              scale: 1.03,
+                              transition: {
+                                type: "spring",
+                                stiffness: 400,
+                                damping: 10
+                              }
+                            }}
+                          >
+                            <ProjectCard project={project} />
+                          </motion.div>
+                        ))}
+                      </motion.div>
+                    </div>
+                    <div className="absolute right-0 top-0 bottom-0 w-3 md:w-9 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none"></div>
+                  </div>
+                )}
+
+                {/* Grid view (shown when expanded) */}
+                <motion.div
+                  key="grid"
+                  className="overflow-hidden"
+                  initial="collapsed"
+                  animate={isExpanded ? "expanded" : "collapsed"}
+                  variants={gridVariants}
+                >
+                  <motion.div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 pt-2">
+                    {projectGroup.map((project, index) => (
+                      <motion.div
+                        key={project.day}
+                        className="w-full"
+                        variants={itemVariants}
+                        custom={index}
+                        whileHover={{
+                          scale: 1.03,
+                          transition: {
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10
+                          }
+                        }}
+                      >
+                        <ProjectCard project={project} />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </motion.div>
+              </AnimatePresence>
+
+            </motion.div>
+
+          );
+        })
+        }
+      </motion.div >
+
     );
   };
 
@@ -176,16 +278,16 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
   // Animation variants for view transitions
   const viewTransitionVariants = {
     initial: { opacity: 0, y: 20 },
-    animate: { 
-      opacity: 1, 
+    animate: {
+      opacity: 1,
       y: 0,
       transition: {
         duration: 0.4,
         ease: "easeInOut"
       }
     },
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       y: -20,
       transition: {
         duration: 0.3
@@ -208,7 +310,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
               onClick={toggleSortOrder}
               className="flex items-center gap-2"
             >
-              <ArrowUpDown className="w-4 h-4" />
+              <ArrowsDownUp className="w-4 h-4" />
               <span>Sort Days: {sortOrder === 'asc' ? 'Earliest First' : 'Latest First'}</span>
             </Button>
           </motion.div>
@@ -219,7 +321,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
             onClick={() => setViewMode('paginated')}
             className="flex items-center gap-2"
           >
-            <LayoutGrid className="w-4 h-4" />
+            <SquaresFour className="w-4 h-4" />
             <span>Days</span>
           </Button>
           <Button
@@ -227,12 +329,12 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
             onClick={() => setViewMode('carousel')}
             className="flex items-center gap-2"
           >
-            <ScrollText className="w-4 h-4" />
+            <Rows className="w-4 h-4" />
             <span>Projects</span>
           </Button>
         </div>
       </div>
-      
+
       <AnimatePresence mode="popLayout">
         {viewMode === 'paginated' ? (
           <motion.div

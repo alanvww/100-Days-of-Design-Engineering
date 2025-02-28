@@ -1,5 +1,5 @@
 'use client'
-import React, { JSX, useState } from 'react';
+import React, { JSX, useState, useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Copy, Check } from 'lucide-react';
 import TextEditor from '@/elements/text-editor';
@@ -1401,10 +1401,17 @@ const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
   };
 
   // Filter elements based on the day parameter
-  const filteredElements = elements.filter(element => element.day === day);
+  // const filteredElements = elements.filter(element => element.day === day);
+  const filteredElements = useMemo(() =>
+    elements.reduce<Record<number, UIElement[]>>((acc, element) => {
+      if (!acc[element.day]) acc[element.day] = [];
+      acc[element.day].push(element);
+      return acc;
+    }, {}),
+    []);
 
   // If no elements found for the given day, show a message
-  if (filteredElements.length === 0) {
+  if (!filteredElements[day] || filteredElements[day].length === 0) {
     return (
       <></>
     );
@@ -1412,7 +1419,7 @@ const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
 
   return (
     <div className="p-4">
-      {filteredElements.map((element, index) => (
+      {filteredElements[day].map((element, index) => (
         <div key={index} className="mb-8">
           <Tabs defaultValue="preview" className="w-full">
             <TabsList>
