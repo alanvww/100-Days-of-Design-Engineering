@@ -14,6 +14,7 @@ import ContactCard from '@/elements/contact-card';
 import FeedbackBar from '@/elements/feedback-bar';
 import BlurText from '@/elements/blur-text';
 import GridWithPlaceholders from '@/elements/grid-with-placeholders';
+import BreadcrumbShowcase from '@/elements/breadcurmb-showcase';
 interface UIElement {
   name: string;
   component: JSX.Element;
@@ -1545,6 +1546,14 @@ export default function Grid({
     );
 }`,
     day: 35
+  },
+  {
+    name: 'Breadcrumb',
+    component: (
+      <BreadcrumbShowcase />
+    ),
+    code: ``,
+    day: 37
   },
 ];
 
