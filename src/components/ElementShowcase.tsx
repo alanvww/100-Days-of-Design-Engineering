@@ -1555,6 +1555,14 @@ export default function Grid({
     code: ``,
     day: 37
   },
+  {
+    name: 'CRT Screen',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/siIbjoa2YX2c81EWjoLS' />
+    ),
+    code: ``,
+    day: 39
+  },
 ];
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
