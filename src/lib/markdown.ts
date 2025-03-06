@@ -75,3 +75,17 @@ export async function getAllProjects(): Promise<ProjectFrontmatter[]> {
 		return [];
 	}
 }
+
+export async function getNumberOfDays(): Promise<number> {
+	const contentDirectory = path.join(process.cwd(), 'src', 'content');
+	try {
+		const files = await fs.readdir(contentDirectory);
+		const markdownFiles = files.filter(
+			(file) => file.startsWith('day-') && file.endsWith('.md')
+		);
+		return markdownFiles.length;
+	} catch (error) {
+		console.error('Error counting days:', error);
+		return 0;
+	}
+}

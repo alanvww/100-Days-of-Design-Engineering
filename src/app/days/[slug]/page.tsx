@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
-import { getMarkdownContent, getProject } from '@/lib/markdown';
+import { getMarkdownContent, getProject, getNumberOfDays } from '@/lib/markdown';
 import { Metadata } from 'next';
 import { Navbar } from '@/components/ui/Navbar';
 import { Footer } from '@/components/ui/Footer';
+import { DayNavigation } from '@/components/ui/DayNavigation';
 import MarkdownContent from '@/components/MarkdownContent';
 import ElementShowcase from '@/components/ElementShowcase';
 import { Suspense } from 'react';
@@ -31,12 +32,14 @@ function PageContent({
     slug,
     project,
     content,
-    dayNumber
+    dayNumber,
+    totalDays
 }: {
     slug: string;
     project: ProjectFrontmatter;
     content: string;
     dayNumber: number;
+    totalDays: number;
 }) {
     return (
         <div className="min-h-screen flex flex-col">
@@ -88,6 +91,14 @@ function PageContent({
                     <div className="mt-16">
                         <ElementShowcase day={dayNumber} />
                     </div>
+                    
+                    {/* Day Navigation */}
+                    <DayNavigation 
+                        currentDay={dayNumber} 
+                        totalDays={totalDays} 
+                        color={project?.color}
+                        className="mt-16"
+                    />
                 </article>
             </main>
             <Footer />
@@ -100,6 +111,7 @@ export default async function DayPage({ params }: PageProps) {
     const slug = resolvedParams.slug;
     const project = await getProject(slug);
     const content = await getMarkdownContent(slug);
+    const totalDays = await getNumberOfDays();
 
     const dayNumber = parseInt(slug, 10);
 
@@ -112,13 +124,13 @@ export default async function DayPage({ params }: PageProps) {
     }
 
     return (
-
         <Suspense fallback={<Loading />}>
             {(project && content) ? <PageContent
                 slug={slug}
                 project={project}
                 content={content}
                 dayNumber={dayNumber}
+                totalDays={totalDays}
             /> : <Loading />}
         </Suspense>
     );
