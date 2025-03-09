@@ -1563,6 +1563,14 @@ export default function Grid({
     code: ``,
     day: 39
   },
+  {
+    name: 'Untitled #1',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/37WlkOTJF9X9yhsq20ng' />
+    ),
+    code: ``,
+    day: 42
+  },
 ];
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
