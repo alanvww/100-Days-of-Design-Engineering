@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase';
 
-export async function GET(
-	request: NextRequest,
-	{ params }: { params: { dayId: string } }
-) {
+type Props = {
+	params: Promise<{
+		dayId: string;
+	}>;
+};
+
+export async function GET(request: NextRequest, props: Props) {
 	try {
-		const rawParams = await params;
-		const dayId = parseInt(rawParams.dayId, 10);
+		const { dayId: dayIdString } = await props.params;
+		const dayId = parseInt(dayIdString, 10);
 
 		if (isNaN(dayId)) {
 			return NextResponse.json({ error: 'Invalid day ID' }, { status: 400 });
