@@ -10,6 +10,8 @@ import { Suspense } from 'react';
 import Loading from './loading';
 import { ProjectFrontmatter } from '@/lib/markdown';
 import * as motion from "motion/react-client"
+import FeedbackBar from '@/components/FeedbackBar';
+
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -91,14 +93,19 @@ function PageContent({
                     <div className="mt-16">
                         <ElementShowcase day={dayNumber} />
                     </div>
-                    
+
                     {/* Day Navigation */}
-                    <DayNavigation 
-                        currentDay={dayNumber} 
-                        totalDays={totalDays} 
+                    <DayNavigation
+                        currentDay={dayNumber}
+                        totalDays={totalDays}
                         color={project?.color}
                         className="mt-16"
                     />
+
+                    {/* Feedback Bar */}
+                    <div className="mt-12 mb-8">
+                        <FeedbackBar dayId={dayNumber} showCounts={true} color={project?.color} />
+                    </div>
                 </article>
             </main>
             <Footer />
