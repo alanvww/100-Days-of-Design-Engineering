@@ -1571,6 +1571,14 @@ export default function Grid({
     code: ``,
     day: 42
   },
+  {
+    name: 'Logo Light Ray',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/Yxm5Eurs9ZQqdRXHsvot' />
+    ),
+    code: ``,
+    day: 48
+  },
 ];
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
