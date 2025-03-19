@@ -41,6 +41,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
   const projectColor = project.color || '#333333';
   const backgroundColor = 'white';
 
+  console.log(project.project)
+
   return new ImageResponse(
     (
       <div
@@ -60,21 +62,22 @@ export default async function Image({ params }: { params: { slug: string } }) {
         <div
           style={{
             position: 'absolute',
-            right: '0',
-            top: '25%',
-            // transform: 'translateX(36%)',
+            top: 0,
+            right: 0,
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            paddingRight: '80px',
             fontSize: '120px',
+            textAlign: 'right',
             color: projectColor,
             fontWeight: 600,
-            textAlign: 'end',
-            width: '1200px',
-            paddingRight: '160px',
             letterSpacing: '-2px',
             lineHeight: 1.2,
             opacity: 0.15,
             pointerEvents: 'none',
-            alignSelf: 'flex-end',
-            justifySelf: 'flex-end',
           }}
         >
           {project.project}
