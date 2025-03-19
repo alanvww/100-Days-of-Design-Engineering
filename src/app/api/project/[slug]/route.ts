@@ -1,14 +1,17 @@
 import { getProject } from '@/lib/markdown';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(
-	request: NextRequest,
-	{ params }: { params: { slug: string } }
-) {
-	const { slug } = await params;
+type Props = {
+	params: Promise<{
+		slug: string;
+	}>;
+};
+
+export async function GET(request: NextRequest, props: Props) {
+	const { slug } = await props.params;
 	try {
 		// Ensure the slug is properly formatted - remove any non-numeric characters
-		const cleanSlug = params.slug.replace(/\D/g, '');
+		const cleanSlug = slug.replace(/\D/g, '');
 
 		// Fetch project data
 		const project = await getProject(cleanSlug);
