@@ -1,6 +1,4 @@
 import { ImageResponse } from 'next/og';
-import { getProject } from '@/lib/markdown';
-
 
 // Image metadata
 export const alt = 'Design Engineering Day Project';
@@ -13,12 +11,22 @@ export const contentType = 'image/png';
 
 // Generate images for day pages
 export default async function Image({ params }: { params: { slug: string } }) {
+  const { slug } = await params
   try {
     // Ensure the slug is properly formatted - remove any non-numeric characters
-    const cleanSlug = params.slug.replace(/\D/g, '');
+    const cleanSlug = slug.replace(/\D/g, '');
 
-    // Fetch project data
-    const project = await getProject(cleanSlug);
+    // Fetch project data from API
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://100daysofdesign.engineering'}/api/project/${cleanSlug}`, {
+      method: 'GET',
+      next: { revalidate: 60 }, // Revalidate the data every 60 seconds
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch project data: ${response.status}`);
+    }
+
+    const project = await response.json();
 
     if (!project) {
       console.error(`[OpenGraph] Project not found for slug: ${cleanSlug}`);
