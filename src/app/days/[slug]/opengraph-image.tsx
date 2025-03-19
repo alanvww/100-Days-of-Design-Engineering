@@ -12,52 +12,55 @@ export const contentType = 'image/png';
 
 // Generate images for day pages
 export default async function Image({ params }: { params: { slug: string } }) {
-  const slug = params.slug;
-  const project = await getProject(slug);
+  try {
+    // Ensure the slug is properly formatted - remove any non-numeric characters
+    const cleanSlug = params.slug.replace(/\D/g, '');
+    
+    // Fetch project data
+    const project = await getProject(cleanSlug);
 
-  if (!project) {
+    if (!project) {
+      console.error(`[OpenGraph] Project not found for slug: ${cleanSlug}`);
+      return new ImageResponse(
+        (
+          <div
+            style={{
+              background: 'white',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '64px',
+              fontWeight: 'bold',
+            }}
+          >
+            Day {cleanSlug} - Not Found
+          </div>
+        ),
+        { ...size }
+      );
+    }
+
+    const dayNumber = parseInt(cleanSlug, 10);
+    const projectColor = project.color || '#333333';
+    const backgroundColor = 'white';
+
     return new ImageResponse(
       (
         <div
           style={{
-            background: 'white',
+            position: 'relative',
+            background: backgroundColor,
             width: '100%',
             height: '100%',
             display: 'flex',
-            alignItems: 'center',
+            flexDirection: 'column',
             justifyContent: 'center',
-            fontSize: '64px',
-            fontWeight: 'bold',
+            alignItems: 'flex-start',
+            overflow: 'hidden',
           }}
         >
-          Day {slug} - Not Found
-        </div>
-      ),
-      { ...size }
-    );
-  }
-
-  const dayNumber = parseInt(slug, 10);
-  const projectColor = project.color || '#333333';
-  const backgroundColor = 'white';
-
-  console.log(project.project)
-
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          position: 'relative',
-          background: backgroundColor,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'flex-start',
-          overflow: 'hidden',
-        }}
-      >
         {/* Background project name */}
         <div
           style={{
@@ -128,9 +131,31 @@ export default async function Image({ params }: { params: { slug: string } }) {
           </div>
         </div>
       </div>
-    ),
-    {
-      ...size,
-    }
-  );
+      ),
+      {
+        ...size,
+      }
+    );
+  } catch (error) {
+    console.error(`[OpenGraph] Error generating image:`, error);
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            background: 'white',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '64px',
+            fontWeight: 'bold',
+          }}
+        >
+          Error generating image
+        </div>
+      ),
+      { ...size }
+    );
+  }
 }
