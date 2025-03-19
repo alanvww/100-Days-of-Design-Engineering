@@ -15,7 +15,19 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "100 Days of Design Engineering by Alan Ren",
-  description: "Showcase of Alan‘s design engineering journey over 100 days.",
+  description: "Showcase of Alan's design engineering journey over 100 days.",
+  openGraph: {
+    title: "100 Days of Design Engineering by Alan Ren",
+    description: "Showcase of Alan's design engineering journey over 100 days.",
+    type: "website",
+    siteName: "100 Days of Design Engineering",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "100 Days of Design Engineering by Alan Ren",
+    description: "Showcase of Alan's design engineering journey over 100 days.",
+    creator: "@alanvww",
+  },
 };
 
 export default function RootLayout({
