@@ -17,7 +17,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
     const cleanSlug = slug.replace(/\D/g, '');
 
     // Fetch project data from API
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://100daysofdesign.engineering'}/api/project/${cleanSlug}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://100days.alan.ooo'}/api/project/${cleanSlug}`, {
       method: 'GET',
       next: { revalidate: 60 }, // Revalidate the data every 60 seconds
     });
