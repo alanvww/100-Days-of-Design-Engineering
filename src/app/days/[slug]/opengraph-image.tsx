@@ -1,6 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { getProject } from '@/lib/markdown';
 
+
 // Image metadata
 export const alt = 'Design Engineering Day Project';
 export const size = {
@@ -15,7 +16,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
   try {
     // Ensure the slug is properly formatted - remove any non-numeric characters
     const cleanSlug = params.slug.replace(/\D/g, '');
-    
+
     // Fetch project data
     const project = await getProject(cleanSlug);
 
@@ -61,76 +62,76 @@ export default async function Image({ params }: { params: { slug: string } }) {
             overflow: 'hidden',
           }}
         >
-        {/* Background project name */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            paddingRight: '80px',
-            fontSize: '120px',
-            textAlign: 'right',
-            color: projectColor,
-            fontWeight: 600,
-            letterSpacing: '-2px',
-            lineHeight: 1.2,
-            opacity: 0.15,
-            pointerEvents: 'none',
-          }}
-        >
-          {project.project}
-        </div>
-
-        {/* Foreground title */}
-        <div
-          style={{
-            position: 'relative',
-            display: 'flex',
-            flexDirection: 'column',
-            marginLeft: '120px',
-            width: '75%',
-          }}
-        >
+          {/* Background project name */}
           <div
             style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              width: '100%',
+              height: '100%',
               display: 'flex',
-              fontSize: '20px',
-              fontWeight: 600,
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              paddingRight: '80px',
+              fontSize: '120px',
+              textAlign: 'right',
               color: projectColor,
-              marginBottom: '12px',
-            }}
-          >
-            Day {dayNumber}
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              fontSize: '64px',
-              fontWeight: 700,
-              color: '#333',
-              marginBottom: '20px',
+              fontWeight: 600,
+              letterSpacing: '-2px',
               lineHeight: 1.2,
+              opacity: 0.15,
+              pointerEvents: 'none',
             }}
           >
-            {project.title}
+            {project.project}
           </div>
+
+          {/* Foreground title */}
           <div
             style={{
+              position: 'relative',
               display: 'flex',
-              fontSize: '24px',
-              fontWeight: 400,
-              color: '#666',
+              flexDirection: 'column',
+              marginLeft: '120px',
+              width: '75%',
             }}
           >
-            100 Days of Design Engineering
+            <div
+              style={{
+                display: 'flex',
+                fontSize: '20px',
+                fontWeight: 600,
+                color: projectColor,
+                marginBottom: '12px',
+              }}
+            >
+              Day {dayNumber}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                fontSize: '64px',
+                fontWeight: 700,
+                color: '#333',
+                marginBottom: '20px',
+                lineHeight: 1.2,
+              }}
+            >
+              {project.title}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                fontSize: '24px',
+                fontWeight: 400,
+                color: '#666',
+              }}
+            >
+              100 Days of Design Engineering
+            </div>
           </div>
         </div>
-      </div>
       ),
       {
         ...size,

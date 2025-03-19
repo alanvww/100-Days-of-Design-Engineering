@@ -5,6 +5,8 @@ import remarkParse from 'remark-parse';
 import remarkHtml from 'remark-html';
 import matter from 'gray-matter';
 
+export const runtime = "edge";
+
 export interface ProjectFrontmatter {
 	title: string;
 	project: string;
