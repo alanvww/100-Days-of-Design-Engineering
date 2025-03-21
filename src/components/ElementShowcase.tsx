@@ -1579,6 +1579,14 @@ export default function Grid({
     code: ``,
     day: 48
   },
+  {
+    name: 'Distortion Effect',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/58PegkCdzpJ0PbIzJlbV' />
+    ),
+    code: ``,
+    day: 54
+  },
 ];
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
