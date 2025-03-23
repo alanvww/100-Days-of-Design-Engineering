@@ -1587,6 +1587,14 @@ export default function Grid({
     code: ``,
     day: 54
   },
+  {
+    name: 'Glyph Ditcher Maze',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/cqVDAeRy0Nc72VLP3JOh' />
+    ),
+    code: ``,
+    day: 56
+  },
 ];
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
