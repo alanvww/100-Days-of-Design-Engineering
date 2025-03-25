@@ -1,6 +1,7 @@
 import AnimatedBackground from './animated-background';
 import { ExternalLink } from 'lucide-react';
 import { Link } from 'next-view-transitions'
+import { Sun, Moon } from '@phosphor-icons/react/dist/ssr';
 
 const NAVIGATION_ITEMS = [
     {
@@ -32,7 +33,7 @@ const isExternalLink = (href: string) => {
 
 export function Navbar() {
     return (
-        <nav className="max-w-7xl px-2 md:px-8 md:mx-0">
+        <nav className=" px-2 md:px-8 md:mx-0 flex flex-row">
             <div className="w-full max-w-fit rounded-xl border border-zinc-200 p-1 dark:border-zinc-800">
                 <div className="flex overflow-x-auto">
                     <AnimatedBackground
@@ -71,7 +72,27 @@ export function Navbar() {
                             );
                         })}
                     </AnimatedBackground>
+
+
                 </div>
+            </div>
+            <div className="hidden md:flex ml-auto w-full max-w-fit rounded-xl border border-zinc-200 p-1 dark:border-zinc-800 cursor-not-allowed ">
+                <button
+                    key='theme-toggle'
+                    data-id="theme-toggle"
+                    type="button"
+                    className="cursor-not-allowed align-middle justify-center m-auto px-3 py-2 rounded-lg text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-50 dark:hover:bg-zinc-800 transition-colors duration-300"
+                    aria-label="Toggle theme"
+                >
+                    <div className="hidden dark:flex items-center gap-1.5">
+                        <Sun size={32} className="h-4 w-4 md:h-5 md:w-5" weight="fill" />
+                        <span className="text-xs md:text-sm">Light</span>
+                    </div>
+                    <div className="flex dark:hidden items-center gap-1.5">
+                        <Moon size={32} className="h-4 w-4 md:h-5 md:w-5" weight="fill" />
+                        <span className="text-xs md:text-sm">Dark</span>
+                    </div>
+                </button>
             </div>
         </nav>
     );
