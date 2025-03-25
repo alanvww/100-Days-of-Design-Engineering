@@ -51,7 +51,7 @@ const TechCard: React.FC<TechCardProps> = ({ name, comment, iconUrl, link, platf
                     </ul>
                 )}
 
-                <p className="m-2 text-gray-500">{comment}</p>
+                <p className="pl-2 m-2 text-gray-500">{comment}</p>
             </motion.span>
         </motion.section>
     );
