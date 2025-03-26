@@ -1,8 +1,8 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin 'tailwindcss-animate';
 
-@custom-variant dark (&:is(.dark *));
+@variant dark (&:where([data-theme="dark"] *));
 
 @theme {
 	--breakpoint-xs: 30rem;

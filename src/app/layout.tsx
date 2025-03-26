@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ViewTransitions } from 'next-view-transitions'
 import "./globals.css";
+import { ThemeProvider } from 'next-themes'
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,7 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <ViewTransitions>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <head>
           <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
           <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
@@ -56,7 +58,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          {children}
+          <ThemeProvider attribute="data-mode">{children}</ThemeProvider>
         </body>
       </html>
     </ViewTransitions>
