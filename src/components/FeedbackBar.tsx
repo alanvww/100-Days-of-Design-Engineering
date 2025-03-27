@@ -140,7 +140,7 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
         <div className={`flex flex-col items-center justify-center mb-8 ${className}`}>
             <div className="flex flex-row max-w-full space-x-1 text-center justify-center items-center relative">
                 <motion.div
-                    className={`h-18 min-w-36 ${feedbackGiven ? 'bg-gray-200' : 'bg-white'} rounded-l-full shadow flex justify-center items-center gap-2 px-4 ${feedbackGiven ? 'cursor-default' : 'cursor-pointer'} ${!feedbackGiven && !feedbackType ? 'border-2' : ''}`}
+                    className={`h-18 min-w-36 ${feedbackGiven ? 'bg-gray-200 dark:bg-gray-800' : 'bg-white dark:bg-gray-900'} rounded-l-full shadow flex justify-center items-center gap-2 px-4 ${feedbackGiven ? 'cursor-default' : 'cursor-pointer'} ${!feedbackGiven && !feedbackType ? 'border-2' : ''}`}
                     style={!feedbackGiven && !feedbackType ? buttonStyle : {}}
                     whileHover={!feedbackGiven ? { scale: 1.05 } : {}}
                     whileTap={!feedbackGiven ? { scale: 0.95 } : {}}
@@ -185,7 +185,7 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
                 </motion.div>
 
                 <motion.div
-                    className={`h-18 min-w-36 ${feedbackGiven ? 'bg-gray-200' : 'bg-white'} rounded-r-full shadow flex justify-center items-center gap-2 px-4 ${feedbackGiven ? 'cursor-default' : 'cursor-pointer'} ${!feedbackGiven && !feedbackType ? 'border-2' : ''}`}
+                    className={`h-18 min-w-36 ${feedbackGiven ? 'bg-gray-200 dark:bg-gray-800' : 'bg-white dark:bg-gray-900'} rounded-r-full shadow flex justify-center items-center gap-2 px-4 ${feedbackGiven ? 'cursor-default' : 'cursor-pointer'} ${!feedbackGiven && !feedbackType ? 'border-2' : ''}`}
                     style={!feedbackGiven && !feedbackType ? buttonStyle : {}}
                     whileHover={!feedbackGiven ? { scale: 1.05 } : {}}
                     whileTap={!feedbackGiven ? { scale: 0.95 } : {}}
@@ -209,7 +209,7 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
             {/* Show details if requested */}
             {showCounts && (
                 <motion.div
-                    className="flex justify-center mt-2 text-sm text-gray-500"
+                    className="flex justify-center mt-2 text-sm text-gray-500 dark:text-gray-400"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
@@ -219,13 +219,13 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
                     ) : (
                         <div className="flex flex-col items-center">
                             <div className="flex space-x-2 items-center">
-                                <span className="text-xs text-gray-400">
+                                <span className="text-xs text-gray-400 dark:text-gray-500">
                                     {likesCount + dislikesCount} total feedback
                                 </span>
                                 {(likesCount + dislikesCount > 0) && (
-                                    <div className="w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                                    <div className="w-24 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                                         <div
-                                            className="h-full bg-blue-500 rounded-full"
+                                            className="h-full bg-blue-500 dark:bg-blue-600 rounded-full"
                                             style={{
                                                 width: `${(likesCount / (likesCount + dislikesCount)) * 100}%`,
                                                 transition: 'width 0.3s ease-in-out'

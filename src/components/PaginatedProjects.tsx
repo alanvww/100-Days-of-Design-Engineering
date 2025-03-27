@@ -164,7 +164,7 @@ const ProjectPaginator: React.FC<PaginatedProjectsProps> = ({ projects }) => {
 // Main component that wraps the paginator with Suspense
 export const PaginatedProjects: React.FC<PaginatedProjectsProps> = ({ projects }) => {
     return (
-        <Suspense fallback={<div className="py-10 text-center">Loading projects...</div>}>
+        <Suspense fallback={<div className="py-10 text-center text-zinc-600 dark:text-zinc-300">Loading projects...</div>}>
             <ProjectPaginator projects={projects} />
         </Suspense>
     );

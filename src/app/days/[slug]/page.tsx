@@ -44,7 +44,7 @@ function PageContent({
     totalDays: number;
 }) {
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col bg-background text-foreground dark:bg-gray-900 dark:text-white">
             <main className="flex-1 container mx-auto px-4 py-8 sm:py-16">
                 <div className="relative">
                     <Navbar />
@@ -61,7 +61,7 @@ function PageContent({
                         }}
                     >
                         <div
-                            className="md:text-[8rem] text-right my-14 text-[3rem] text-gray-600 opacity-15 tracking-tight leading-none"
+                            className="md:text-[8rem] text-right my-14 text-[3rem] text-gray-600 opacity-15 dark:opacity-80 tracking-tight leading-none"
                             style={{ color: project?.color }}
                         >
                             {project?.project}
@@ -70,7 +70,7 @@ function PageContent({
                     {/* Foreground title */}
                     <div className="relative md:my-32 my-20 w-3/4">
                         <motion.h1
-                            className="text-3xl md:text-8xl text-left text-gray-700 bg-blend-multiply px-2 md:px-8"
+                            className="text-3xl md:text-8xl text-left text-gray-700 dark:text-white bg-blend-multiply px-2 md:px-8"
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{

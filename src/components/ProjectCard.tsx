@@ -37,10 +37,10 @@ const ProjectCardSkeleton = () => (
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
     >
-        <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-200 animate-pulse">
+        <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800 animate-pulse">
             <div className="p-3 h-full flex flex-col justify-between">
-                <div className="text-md bg-gray-300 rounded-full w-24 h-10" />
-                <div className="text-lg sm:text-xl bg-gray-300 w-48 h-8" />
+                <div className="text-md bg-gray-300 dark:bg-gray-700 rounded-full w-24 h-10" />
+                <div className="text-lg sm:text-xl bg-gray-300 dark:bg-gray-700 w-48 h-8" />
             </div>
         </div>
     </motion.div>
@@ -140,7 +140,7 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className }) 
                     >
                         <div className="p-3 h-full flex flex-col justify-between">
                             <motion.span
-                                className="text-md text-white bg-gray-900/60 rounded-full w-fit px-3 py-2"
+                                className="text-md text-white bg-gray-900/60 dark:bg-black/60 rounded-full w-fit px-3 py-2"
                                 whileHover={{ scale: 1.05 }}
                             >
                                 Day {project.day}

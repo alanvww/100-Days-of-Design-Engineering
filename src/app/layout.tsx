@@ -58,7 +58,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <ThemeProvider attribute="data-mode">{children}</ThemeProvider>
+          <ThemeProvider attribute="data-theme">{children}</ThemeProvider>
         </body>
       </html>
     </ViewTransitions>

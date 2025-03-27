@@ -19,12 +19,13 @@ const ThemeSwitch: NextPage = () => {
     }
 
     return (
-        <div className="hidden md:flex ml-auto w-full max-w-fit rounded-xl border border-zinc-200 p-1 dark:border-zinc-800">
+        <div className="hidden md:flex ml-auto w-full max-w-fit rounded-xl border border-border p-1 bg-white dark:bg-gray-800 dark:border-gray-700">
             <button
                 key='theme-toggle'
                 data-id="theme-toggle"
                 type="button"
-                className="cursor-pointer align-middle justify-center m-auto px-3 py-2 rounded-lg text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-50 dark:hover:bg-zinc-800 transition-colors duration-300"
+                className="cursor-pointer align-middle justify-center m-auto px-3 py-2 rounded-lg 
+                text-muted-foreground hover:text-foreground hover:bg-muted dark:text-white dark:hover:text-foreground dark:hover:bg-muted/80 transition-colors duration-300"
                 aria-label="Toggle theme"
                 onClick={() => setTheme(resolvedTheme === "light" ? "dark" : "light")}
 

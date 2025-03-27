@@ -5,6 +5,9 @@ import { Copy, Check } from 'lucide-react';
 import TextEditor from '@/elements/text-editor';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
+import { oneDark } from '@codemirror/theme-one-dark';
+import { useTheme } from 'next-themes'
+
 import { ReactMarquee } from '@/elements/react-marquee';
 import UnicornStudioWrapper from '@/elements/unicorn-studio-wrapper';
 import ReactStepper from '@/elements/react-stepper';
@@ -1668,6 +1671,8 @@ export default TechCard;`,
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const { resolvedTheme } = useTheme()
+
 
   const handleCopy = async (code: string, index: number) => {
     try {
@@ -1698,6 +1703,9 @@ const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
     );
   }
 
+
+
+
   return (
     <div className="p-4">
       {filteredElements[day].map((element, index) => (
@@ -1707,15 +1715,15 @@ const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
               <TabsTrigger value="preview" className='cursor-pointer'>Preview</TabsTrigger>
               {element.code === '' ? null : <TabsTrigger value="code" className='cursor-pointer'>Code</TabsTrigger>}
             </TabsList>
-            <TabsContent value="preview" className="p-4 min-h-full border rounded">
+            <TabsContent value="preview" className="p-4 min-h-full border border-gray-200 dark:border-gray-800 rounded">
               {element.component}
             </TabsContent>
             {element.code === '' ? null :
-              <TabsContent value="code" className="p-4 border rounded">
+              <TabsContent value="code" className="p-4 border border-gray-200 dark:border-gray-800 rounded dark:bg-gray-900">
                 <div className="relative">
                   <button
                     onClick={() => handleCopy(element.code, index)}
-                    className="absolute right-2 top-2 z-100 p-2 rounded bg-white/60 hover:bg-gray-200/60 transition-colors"
+                    className="absolute right-2 top-2 z-100 p-2 rounded bg-white/60 hover:bg-gray-200/60 dark:bg-gray-800/60 dark:hover:bg-gray-700/60 transition-colors"
                     aria-label="Copy code"
                   >
                     {copiedIndex === index ? (
@@ -1728,7 +1736,8 @@ const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
                     <CodeMirror
                       value={element.code}
                       height="100%"  // adjust height as needed
-                      extensions={[javascript({ jsx: true })]}
+                      extensions={[javascript({ jsx: true }),]}
+                      theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
                       readOnly={true}
                       basicSetup={{
                         lineNumbers: true,

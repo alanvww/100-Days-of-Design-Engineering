@@ -15,7 +15,7 @@ export default async function Home() {
     const projects = await getProjects();
 
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col bg-background text-foreground dark:bg-gray-900 dark:text-white">
             <main className="flex-1 container mx-auto px-4 md:px-8 md:py-8 py-16">
                 <div className="md:space-y-6 space-y-8 mb-12">
                     <Navbar />
@@ -33,7 +33,7 @@ export default async function Home() {
                         100 Days of Design Engineering
                     </motion.h1>
                     <motion.p
-                        className="text-base md:text-lg text-left text-gray-600 px-2 md:px-10"
+                        className="text-base md:text-lg text-left text-muted-foreground dark:text-gray-200 px-2 md:px-10"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{
