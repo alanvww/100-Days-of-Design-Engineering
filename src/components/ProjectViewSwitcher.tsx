@@ -321,7 +321,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
             variant={viewMode === 'paginated' ? 'default' : 'destructive'}
             onClick={() => setViewMode('paginated')}
             className={cn("flex items-center gap-2 text-muted-foreground hover:text-foreground hover:bg-muted dark:text-white dark:hover:text-foreground dark:hover:bg-muted/80 transition-colors duration-300",
-              viewMode === 'paginated' ? 'bg-gray-100 dark:bg-gray-300 dark:text-gray-900' : 'bg-white dark:bg-gray-800 dark:border-gray-700'
+              viewMode === 'paginated' ? 'bg-gray-100 dark:bg-gray-300 dark:text-gray-900' : 'bg-white dark:bg-gray-800 border dark:border-gray-700'
             )}
           >
             <SquaresFour className="w-4 h-4" />
@@ -331,7 +331,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
             variant={viewMode === 'carousel' ? 'default' : 'secondary'}
             onClick={() => setViewMode('carousel')}
             className={cn("flex items-center gap-2 text-muted-foreground hover:text-foreground hover:bg-muted dark:text-white dark:hover:text-foreground dark:hover:bg-muted/80 transition-colors duration-300",
-              viewMode === 'carousel' ? 'bg-gray-100 dark:bg-gray-300 dark:text-gray-900' : 'bg-white dark:bg-gray-800 dark:border-gray-700'
+              viewMode === 'carousel' ? 'bg-gray-100 dark:bg-gray-300 dark:text-gray-900' : 'bg-white dark:bg-gray-800 border dark:border-gray-700'
             )}          >
             <Rows className="w-4 h-4" />
             <span>Projects</span>

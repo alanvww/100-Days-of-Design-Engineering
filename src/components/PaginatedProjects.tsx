@@ -64,6 +64,7 @@ const ProjectPagination: React.FC<ProjectPaginationProps> = ({
                             onClick={(e) => handlePageClick(e, page)}
                             isActive={currentPage === page}
                             aria-current={currentPage === page ? "page" : undefined}
+                            className={currentPage === page ? "dark:bg-gray-800 dark:border-gray-700 dark:text-white " : ""}
                         >
                             {page}
                         </PaginationLink>
@@ -134,7 +135,7 @@ const ProjectPaginator: React.FC<PaginatedProjectsProps> = ({ projects }) => {
 
     return (
         <>
-            <motion.section 
+            <motion.section
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 justify-items-center"
                 variants={containerVariants}
                 initial="hidden"
@@ -142,8 +143,8 @@ const ProjectPaginator: React.FC<PaginatedProjectsProps> = ({ projects }) => {
                 key={currentPage} // Re-animate when page changes
             >
                 {currentProjects.map((project, index) => (
-                    <motion.div 
-                        key={project.day} 
+                    <motion.div
+                        key={project.day}
                         variants={itemVariants}
                         custom={index}
                     >

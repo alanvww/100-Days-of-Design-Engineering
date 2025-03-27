@@ -34,7 +34,7 @@ const isExternalLink = (href: string) => {
 export function Navbar() {
     return (
         <nav className=" px-2 md:px-8 md:mx-0 flex flex-row">
-            <div className="w-full max-w-fit rounded-xl border border-border p-1 bg-white dark:bg-gray-800 dark:border-gray-700">
+            <div className="w-full max-w-fit rounded-xl border border-border p-1 bg-white dark:bg-gray-800 dark:border-gray-700 transition-colors duration-300">
                 <div className="flex overflow-x-auto">
                     <AnimatedBackground
                         defaultValue={NAVIGATION_ITEMS[0].id}

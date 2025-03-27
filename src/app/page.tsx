@@ -15,7 +15,7 @@ export default async function Home() {
     const projects = await getProjects();
 
     return (
-        <div className="min-h-screen flex flex-col bg-background text-foreground dark:bg-gray-900 dark:text-white">
+        <div className="min-h-screen flex flex-col bg-background text-foreground dark:bg-gray-900 dark:text-white transition-colors duration-300">
             <main className="flex-1 container mx-auto px-4 md:px-8 md:py-8 py-16">
                 <div className="md:space-y-6 space-y-8 mb-12">
                     <Navbar />
