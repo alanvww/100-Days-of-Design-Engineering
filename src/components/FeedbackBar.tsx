@@ -139,8 +139,8 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
     return (
         <div className={`flex flex-col items-center justify-center mb-8 ${className}`}>
             <div className="flex flex-row max-w-full space-x-1 text-center justify-center items-center relative">
-                <motion.div
-                    className={`h-18 min-w-36 ${feedbackGiven ? 'bg-gray-200 dark:bg-gray-800' : 'bg-white dark:bg-gray-900'} rounded-l-full shadow flex justify-center items-center gap-2 px-4 ${feedbackGiven ? 'cursor-default' : 'cursor-pointer'} ${!feedbackGiven && !feedbackType ? 'border-2' : ''}`}
+                <motion.div 
+                    className={`h-18 min-w-36 ${feedbackGiven ? 'bg-gray-200 dark:bg-gray-800/50 dark:hover:bg-gray-500/30' : 'bg-white dark:bg-gray-800/20 '} rounded-l-full shadow flex justify-center items-center gap-2 px-4 ${feedbackGiven ? 'cursor-default' : 'cursor-pointer'} ${!feedbackGiven && !feedbackType ? 'border-2' : ''}`}
                     style={!feedbackGiven && !feedbackType ? buttonStyle : {}}
                     whileHover={!feedbackGiven ? { scale: 1.05 } : {}}
                     whileTap={!feedbackGiven ? { scale: 0.95 } : {}}
@@ -185,7 +185,7 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
                 </motion.div>
 
                 <motion.div
-                    className={`h-18 min-w-36 ${feedbackGiven ? 'bg-gray-200 dark:bg-gray-800' : 'bg-white dark:bg-gray-900'} rounded-r-full shadow flex justify-center items-center gap-2 px-4 ${feedbackGiven ? 'cursor-default' : 'cursor-pointer'} ${!feedbackGiven && !feedbackType ? 'border-2' : ''}`}
+                    className={`h-18 min-w-36 ${feedbackGiven ?  'bg-gray-200 dark:bg-gray-800/50 dark:hover:bg-gray-500/30' : 'bg-white dark:bg-gray-800/20 '} rounded-r-full shadow flex justify-center items-center gap-2 px-4 ${feedbackGiven ? 'cursor-default' : 'cursor-pointer'} ${!feedbackGiven && !feedbackType ? 'border-2' : ''}`}
                     style={!feedbackGiven && !feedbackType ? buttonStyle : {}}
                     whileHover={!feedbackGiven ? { scale: 1.05 } : {}}
                     whileTap={!feedbackGiven ? { scale: 0.95 } : {}}

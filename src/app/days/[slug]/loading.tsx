@@ -1,6 +1,6 @@
 export default function Loading() {
     return (
-        <div className="min-h-screen flex flex-col animate-pulse">
+        <div className="min-h-screen flex flex-col animate-pulse bg-background dark:bg-gray-900">
             {/* Navbar skeleton */}
             <div className="container mx-auto px-4 py-4">
                 <div className="h-16 bg-gray-200 rounded-lg" />
@@ -10,7 +10,7 @@ export default function Loading() {
                 <div className="relative">
                     {/* Background project name skeleton */}
                     <div className="absolute left-0 w-full overflow-hidden">
-                        <div className="md:h-32 h-16 w-3/4 ml-auto bg-gray-200 rounded-lg my-14" />
+                        <div className="md:h-32 h-16 w-3/4 ml-auto bg-gray-20 rounded-lg my-14" />
                     </div>
 
                     {/* Foreground title skeleton */}

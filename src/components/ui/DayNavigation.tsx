@@ -19,7 +19,7 @@ export function DayNavigation({
   const hasPrevious = currentDay > 1;
   const hasNext = currentDay < totalDays;
 
-  const buttonStyle = color ? { 
+  const buttonStyle = color ? {
     color: color,
     borderColor: color
   } as React.CSSProperties : {};
@@ -28,9 +28,9 @@ export function DayNavigation({
     <div className={cn('flex justify-between items-center gap-4 my-8', className)}>
       {hasPrevious ? (
         <Link href={`/days/${currentDay - 1}`} passHref>
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2"
+          <Button
+            variant="outline"
+            className="flex items-center gap-2 bg-background dark:bg-gray-800/50 dark:hover:bg-gray-500/30"
             style={buttonStyle}
           >
             <ChevronLeft className="h-4 w-4" />
@@ -43,9 +43,9 @@ export function DayNavigation({
 
       {hasNext ? (
         <Link href={`/days/${currentDay + 1}`} passHref>
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2"
+          <Button
+            variant="outline"
+            className="flex items-center gap-2 bg-background dark:bg-gray-800/50 dark:hover:bg-gray-500/30"
             style={buttonStyle}
           >
             Next Day
