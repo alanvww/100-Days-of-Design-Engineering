@@ -167,7 +167,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
           return (
             <motion.div
               key={projectType}
-              className="space-y-2 border border-zinc-200 dark:border-zinc-800 px-2 py-6 rounded-2xl"
+              className="space-y-2 border border-zinc-200 dark:border-zinc-800 px-2 py-6 rounded-2xl transition-colors duration-300"
               variants={sectionVariants}
               custom={sectionIndex}
             >
@@ -179,7 +179,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
                   {projectType}
                 </motion.h2>
                 <motion.button
-                  className="hidden sm:flex mr-6 py-1 px-3 rounded-lg bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-sm items-center gap-1 transition-colors"
+                  className="hidden sm:flex mr-6 py-1 px-3 rounded-lg bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-sm items-center gap-1 transition-colors duration-300"
                   onClick={() => toggleGroupExpansion(projectType)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -204,7 +204,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
                 {/* Carousel view (shown when not expanded) */}
                 {!isExpanded && (
                   <div className="relative" key="carousel">
-                    <div className="absolute left-0 top-0 bottom-0 w-3 md:w-9 bg-gradient-to-r from-background to-transparent dark:from-gray-900 z-10 pointer-events-none"></div>
+                    <div className="absolute left-0 top-0 bottom-0 w-3 md:w-9 bg-gradient-to-r from-background to-transparent dark:from-gray-900 z-10 pointer-events-none transition-colors duration-300"></div>
                     <div className="scrollbar-none -mx-4 px-4">
                       <motion.div
                         className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4"
@@ -230,7 +230,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
                         ))}
                       </motion.div>
                     </div>
-                    <div className="absolute right-0 top-0 bottom-0 w-3 md:w-9 bg-gradient-to-l from-background to-transparent dark:from-gray-900 z-10 pointer-events-none"></div>
+                    <div className="absolute right-0 top-0 bottom-0 w-3 md:w-9 bg-gradient-to-l from-background to-transparent dark:from-gray-900 z-10 pointer-events-none transition-colors duration-300"></div>
                   </div>
                 )}
 
