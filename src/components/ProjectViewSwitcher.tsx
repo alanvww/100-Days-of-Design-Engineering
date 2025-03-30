@@ -177,7 +177,11 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
                   variants={headingVariants}
                 >
                   {projectType}
+                  <span className="mx-3 my-6 px-2 py-1 rounded-full text-sm align-middle justify-center bg-gray-200 dark:bg-gray-600 text-zinc-500 dark:text-zinc-200 font-normal">
+                    {projectGroup.length}
+                  </span>
                 </motion.h2>
+
                 <motion.button
                   className="hidden sm:flex mr-6 py-1 px-3 rounded-lg bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-sm items-center gap-1 transition-colors duration-300"
                   onClick={() => toggleGroupExpansion(projectType)}
@@ -242,7 +246,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
                   animate={isExpanded ? "expanded" : "collapsed"}
                   variants={gridVariants}
                 >
-                  <motion.div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 pt-2">
+                  <motion.div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 px-4 pt-2">
                     {projectGroup.map((project, index) => (
                       <motion.div
                         key={project.day}
