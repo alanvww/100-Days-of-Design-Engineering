@@ -1880,6 +1880,14 @@ const VerticalMenuComponent = () => {
 export default VerticalMenuComponent;`,
     day: 64
   },
+  {
+    name: 'Trance',
+    component: (
+      <UnicornStudioWrapper link='https://unicorn.studio/embed/0ZuoEfqzQYechxW2fIY9' />
+    ),
+    code: ``,
+    day: 68
+  },
 ];
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
