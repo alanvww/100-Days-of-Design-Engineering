@@ -1888,6 +1888,14 @@ export default VerticalMenuComponent;`,
     code: ``,
     day: 68
   },
+  {
+    name: 'Cosmic Text',
+    component: (
+      <UnicornStudioWrapper link='https://www.unicorn.studio/embed/DSVTaOwQeDeQL3djnn89' />
+    ),
+    code: ``,
+    day: 70
+  },
 ];
 
 const ElementShowcase: React.FC<ElementShowcaseProps> = ({ day }) => {
