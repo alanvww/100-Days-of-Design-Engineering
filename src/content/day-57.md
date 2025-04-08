@@ -1,7 +1,7 @@
 ---
 title: 'Supabase: Vector Indexes'
 description: 'Integrating Supabase for data management.'
-project: 'Backend'
+project: 'Learning'
 image: '/assets/day-57/1.png'
 day: 57
 color: '#9DD01A'

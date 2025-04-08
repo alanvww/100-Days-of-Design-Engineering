@@ -1,7 +1,7 @@
 ---
 title: 'Supabase Auth'
 description: 'Overview of Supabase authentication process and features.'
-project: 'Backend'
+project: 'Learning'
 image: '/assets/day-47/1.png'
 day: 47
 color: '#A73649'

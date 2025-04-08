@@ -1,7 +1,7 @@
 ---
 title: 'Supabase: OrioleDB'
 description: 'OrioleDB from Supabase docs.'
-project: 'Backend'
+project: 'Learning'
 image: '/assets/day-41/1.png'
 day: 41
 color: '#3ECF8E'

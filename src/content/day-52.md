@@ -1,7 +1,7 @@
 ---
 title: 'BetterAuth'
 description: 'Testing Implementation of authentication.'
-project: 'Backend'
+project: 'Learning'
 image: '/assets/day-52/1.png'
 day: 52
 color: '#6E5B91'

@@ -1,7 +1,7 @@
 ---
 title: 'Deep Dive: Supabase UI Library'
 description: ''
-project: 'Backend'
+project: 'Learning'
 image: '/assets/day-67/1.png'
 day: 67
 color: '#6BBDD6'
