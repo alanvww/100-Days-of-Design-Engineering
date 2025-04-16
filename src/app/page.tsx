@@ -1,10 +1,11 @@
-
+import { lazy, Suspense } from "react";
 import { getAllProjects } from '@/lib/markdown';
 import { Footer } from "@/components/ui/Footer";
 import { Navbar } from "@/components/ui/Navbar";
-import ProjectViewSwitcher from "@/components/ProjectViewSwitcher";
 import { Project } from "@/types/ProjectTypes";
 import * as motion from "motion/react-client";
+
+const ProjectViewSwitcher = lazy(() => import("@/components/ProjectViewSwitcher"));
 
 async function getProjects(): Promise<Project[]> {
     const projects = await getAllProjects();
@@ -47,7 +48,9 @@ export default async function Home() {
                     </motion.p>
                 </div>
 
-                <ProjectViewSwitcher projects={projects} />
+                <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading projects...</div>}>
+                    <ProjectViewSwitcher projects={projects} />
+                </Suspense>
             </main>
 
             <Footer />

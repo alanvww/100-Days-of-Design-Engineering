@@ -1,7 +1,7 @@
 "use client";
 
 import { ThumbsUp, ThumbsDown } from "@phosphor-icons/react";
-import { motion, useAnimation, AnimatePresence } from "framer-motion";
+import { motion, useAnimation, AnimatePresence } from "motion/react";
 import { useState, useEffect } from "react";
 
 interface FeedbackBarProps {

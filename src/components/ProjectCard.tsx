@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { Link } from 'next-view-transitions'
+import Link from "next/link";
 import { Project } from "@/types/ProjectTypes";
 import { Suspense } from "react";
-import { motion } from "motion/react";
+import * as motion from "motion/react-client";
 
 // Utility functions for generating color data URL
 const keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -47,11 +47,12 @@ const ProjectCardSkeleton = () => (
 );
 
 interface ProjectCardProps {
-    project: Project; // Assuming Project type has a color property of type string
+    project: Project;
     className?: string;
+    index?: number; // Add index for priority loading
 }
 
-const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className }) => {
+const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className, index = 0 }) => {
     // Convert hex color to RGB and generate data URL
     const rgb = hexToRGB(project.color);
     const blurDataURL = rgbDataURL(rgb.r, rgb.g, rgb.b);
@@ -108,8 +109,19 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className }) 
         }
     };
 
+    // Determine if this image should be prioritized
+    const isPriority = index < 8; // Prioritize first 8 images (visible on initial screen)
+
+    // Determine fetch priority based on index
+    const fetchPriority = index < 4 ? "high" : (index < 12 ? "auto" : "low");
+
     return (
-        <Link href={`/days/${project.day}`} className="cursor-pointer px-2 md:px-4 min-w-full w-60 md:w-80">
+        <Link
+            href={`/days/${project.day}`}
+            scroll={false}
+            className="cursor-pointer px-2 md:px-4 min-w-full w-60 md:w-80"
+            style={{ viewTransitionName: `project-${project.day}` }}
+        >
             <motion.div
                 className="cursor-pointer px-2 md:px-4 min-w-full"
                 initial="hidden"
@@ -124,12 +136,14 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className }) 
                         alt={`Day ${project.day}`}
                         width={400}
                         height={400}
-                        quality={50}
-                        sizes="(min-width: 640px) 400px, 100vw"
+                        quality={isPriority ? 85 : 75} // Higher quality for visible images
+                        sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw" // Responsive sizing
                         className="object-cover w-full h-full"
-                        priority={true}
+                        priority={isPriority}
                         placeholder='blur'
                         blurDataURL={blurDataURL}
+                        fetchPriority={fetchPriority as "high" | "low" | "auto"} // New in Next.js 15
+                        loading={isPriority ? "eager" : "lazy"}
                     />
                     <motion.div
                         className="absolute inset-0"
@@ -159,8 +173,8 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className }) 
     );
 };
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => (
+export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index = 0 }) => (
     <Suspense fallback={<ProjectCardSkeleton />}>
-        <ProjectCardContent project={project} />
+        <ProjectCardContent project={project} index={index} />
     </Suspense>
 );
