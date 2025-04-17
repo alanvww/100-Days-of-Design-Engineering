@@ -1,10 +1,8 @@
 "use client";
 
 import { ThumbsUp, ThumbsDown } from "@phosphor-icons/react";
-import { motion, useAnimation, AnimatePresence } from "motion/react";
-import { useState, useEffect, useOptimistic, useTransition } from "react";
-import { updateFeedback, getFeedback } from '@/app/actions/feedback';
-import { cn } from "@/lib/utils";
+import { motion, useAnimation, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 
 interface FeedbackBarProps {
     dayId: number;
@@ -13,31 +11,17 @@ interface FeedbackBarProps {
     className?: string;
 }
 
-interface FeedbackCounts {
-    likes: number;
-    dislikes: number;
-}
-
 export default function FeedbackBar({ dayId, showCounts = true, color, className }: FeedbackBarProps) {
     // State for animations and local feedback status
     const [hearts, setHearts] = useState<{ id: string; x: number; delay: number }[]>([]);
     const [feedbackGiven, setFeedbackGiven] = useState(false);
     const [feedbackType, setFeedbackType] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [isPending, startTransition] = useTransition();
     const dislikeControls = useAnimation();
 
-    // Create a state for server-side data
-    const [serverCounts, setServerCounts] = useState<FeedbackCounts>({ likes: 0, dislikes: 0 });
-    
-    // Optimistic UI state - based on the serverCounts
-    const [counts, updateCounts] = useOptimistic(
-        serverCounts,
-        (state, action: { type: 'like' | 'dislike' }) => ({
-            likes: state.likes + (action.type === 'like' ? 1 : 0),
-            dislikes: state.dislikes + (action.type === 'dislike' ? 1 : 0)
-        })
-    );
+    // State for feedback counts
+    const [likesCount, setLikesCount] = useState(0);
+    const [dislikesCount, setDislikesCount] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Style for buttons based on the provided color
     const buttonStyle = color ? {
@@ -46,7 +30,7 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
         borderWidth: '1px',
     } as React.CSSProperties : {};
 
-    // Check if user has already provided feedback for this day and fetch initial counts
+    // Check if user has already provided feedback for this day
     useEffect(() => {
         const checkPreviousFeedback = () => {
             const storedFeedback = localStorage.getItem(`feedback-day-${dayId}`);
@@ -58,9 +42,17 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
 
         const fetchFeedbackCounts = async () => {
             try {
-                const data = await getFeedback(dayId);
-                // Set the server counts which will automatically update the optimistic state
-                setServerCounts(data);
+                const response = await fetch(`/api/feedback/${dayId}`);
+                if (!response.ok) {
+                    throw new Error(`Error fetching feedback: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data) {
+                    setLikesCount(data.likes || 0);
+                    setDislikesCount(data.dislikes || 0);
+                }
             } catch (error) {
                 console.error('Failed to fetch feedback counts:', error);
             } finally {
@@ -72,6 +64,34 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
         fetchFeedbackCounts();
     }, [dayId]);
 
+    // Function to update feedback through API
+    const updateFeedback = async (type: 'like' | 'dislike') => {
+        try {
+            const response = await fetch('/api/feedback/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ dayId, type }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error updating feedback: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Update local state with the response from the server
+            setLikesCount(data.likes);
+            setDislikesCount(data.dislikes);
+
+            // Store the feedback type in localStorage to prevent duplicate submissions
+            localStorage.setItem(`feedback-day-${dayId}`, type);
+        } catch (error) {
+            console.error('Failed to update feedback:', error);
+        }
+    };
+
     // Function to handle like button click
     const handleLike = () => {
         if (feedbackGiven) return;
@@ -79,9 +99,9 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
         // Set feedback as given and record type
         setFeedbackGiven(true);
         setFeedbackType('like');
-        
-        // Store the feedback type in localStorage to prevent duplicate submissions
-        localStorage.setItem(`feedback-day-${dayId}`, 'like');
+
+        // Update feedback through API
+        updateFeedback('like');
 
         // Create hearts animation
         const newHearts = Array.from({ length: 20 }, (_, i) => ({
@@ -96,24 +116,6 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
         setTimeout(() => {
             setHearts(hearts => hearts.filter(heart => !newHearts.find(h => h.id === heart.id)));
         }, 2000);
-
-        // Server update with optimistic update inside transition
-        startTransition(async () => {
-            // Optimistic update - moved inside transition
-            updateCounts({ type: 'like' });
-            
-            try {
-                const updatedCounts = await updateFeedback(dayId, 'like');
-                // Update server counts with the actual response
-                setServerCounts(updatedCounts);
-            } catch (error) {
-                console.error('Failed to update feedback:', error);
-                // Revert optimistic update on error by resetting to server state
-                setFeedbackGiven(false);
-                setFeedbackType(null);
-                localStorage.removeItem(`feedback-day-${dayId}`);
-            }
-        });
     };
 
     // Function to handle dislike button click
@@ -123,46 +125,22 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
         // Set feedback as given and record type
         setFeedbackGiven(true);
         setFeedbackType('dislike');
-        
-        // Store the feedback type in localStorage
-        localStorage.setItem(`feedback-day-${dayId}`, 'dislike');
+
+        // Update feedback through API
+        updateFeedback('dislike');
 
         // Animate the dislike button (shake effect)
         await dislikeControls.start({
             x: [0, -5, 5, -5, 5, 0],
             transition: { duration: 0.4, ease: "easeInOut" }
         });
-
-        // Server update with optimistic update inside transition
-        startTransition(async () => {
-            // Optimistic update - moved inside transition
-            updateCounts({ type: 'dislike' });
-            
-            try {
-                const updatedCounts = await updateFeedback(dayId, 'dislike');
-                // Update server counts with the actual response
-                setServerCounts(updatedCounts);
-            } catch (error) {
-                console.error('Failed to update feedback:', error);
-                // Revert optimistic update on error by resetting to server state
-                setFeedbackGiven(false);
-                setFeedbackType(null);
-                localStorage.removeItem(`feedback-day-${dayId}`);
-            }
-        });
     };
 
     return (
-        <div className={cn("flex flex-col items-center justify-center mb-8", className)}>
+        <div className={`flex flex-col items-center justify-center mb-8 ${className}`}>
             <div className="flex flex-row max-w-full space-x-1 text-center justify-center items-center relative">
                 <motion.div 
-                    className={cn(
-                        "h-18 min-w-36",
-                        feedbackGiven ? 'bg-gray-200 dark:bg-gray-800/50 dark:hover:bg-gray-500/30' : 'bg-white dark:bg-gray-800/20',
-                        "rounded-l-full shadow flex justify-center items-center gap-2 px-4",
-                        feedbackGiven ? 'cursor-default' : 'cursor-pointer',
-                        !feedbackGiven && !feedbackType ? 'border-2' : ''
-                    )}
+                    className={`h-18 min-w-36 ${feedbackGiven ? 'bg-gray-200 dark:bg-gray-800/50 dark:hover:bg-gray-500/30' : 'bg-white dark:bg-gray-800/20 '} rounded-l-full shadow flex justify-center items-center gap-2 px-4 ${feedbackGiven ? 'cursor-default' : 'cursor-pointer'} ${!feedbackGiven && !feedbackType ? 'border-2' : ''}`}
                     style={!feedbackGiven && !feedbackType ? buttonStyle : {}}
                     whileHover={!feedbackGiven ? { scale: 1.05 } : {}}
                     whileTap={!feedbackGiven ? { scale: 0.95 } : {}}
@@ -176,11 +154,8 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
                         />
                     </div>
 
-                    <div className={cn(
-                        feedbackType === 'like' ? 'text-[#3B82F6]' : feedbackType === 'dislike' ? 'text-[#9CA3AF]' : '',
-                        "text-lg"
-                    )}>
-                        {isLoading || isPending ? "..." : counts.likes}
+                    <div className={`${feedbackType === 'like' ? 'text-[#3B82F6]' : feedbackType === 'dislike' ? 'text-[#9CA3AF]' : ''} text-lg`}>
+                        {isLoading ? "..." : likesCount}
                     </div>
 
                     {/* Hearts animation container */}
@@ -210,13 +185,7 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
                 </motion.div>
 
                 <motion.div
-                    className={cn(
-                        "h-18 min-w-36",
-                        feedbackGiven ? 'bg-gray-200 dark:bg-gray-800/50 dark:hover:bg-gray-500/30' : 'bg-white dark:bg-gray-800/20',
-                        "rounded-r-full shadow flex justify-center items-center gap-2 px-4",
-                        feedbackGiven ? 'cursor-default' : 'cursor-pointer',
-                        !feedbackGiven && !feedbackType ? 'border-2' : ''
-                    )}
+                    className={`h-18 min-w-36 ${feedbackGiven ?  'bg-gray-200 dark:bg-gray-800/50 dark:hover:bg-gray-500/30' : 'bg-white dark:bg-gray-800/20 '} rounded-r-full shadow flex justify-center items-center gap-2 px-4 ${feedbackGiven ? 'cursor-default' : 'cursor-pointer'} ${!feedbackGiven && !feedbackType ? 'border-2' : ''}`}
                     style={!feedbackGiven && !feedbackType ? buttonStyle : {}}
                     whileHover={!feedbackGiven ? { scale: 1.05 } : {}}
                     whileTap={!feedbackGiven ? { scale: 0.95 } : {}}
@@ -231,11 +200,8 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
                         />
                     </div>
 
-                    <div className={cn(
-                        feedbackType === 'dislike' ? 'text-[#A61228]' : feedbackType === 'like' ? 'text-[#9CA3AF]' : '',
-                        "text-lg"
-                    )}>
-                        {isLoading || isPending ? "..." : counts.dislikes}
+                    <div className={`${feedbackType === 'dislike' ? 'text-[#A61228]' : feedbackType === 'like' ? 'text-[#9CA3AF]' : ''} text-lg`}>
+                        {isLoading ? "..." : dislikesCount}
                     </div>
                 </motion.div>
             </div>
@@ -254,14 +220,14 @@ export default function FeedbackBar({ dayId, showCounts = true, color, className
                         <div className="flex flex-col items-center">
                             <div className="flex space-x-2 items-center">
                                 <span className="text-xs text-gray-400 dark:text-gray-500">
-                                    {counts.likes + counts.dislikes} total feedback
+                                    {likesCount + dislikesCount} total feedback
                                 </span>
-                                {(counts.likes + counts.dislikes > 0) && (
+                                {(likesCount + dislikesCount > 0) && (
                                     <div className="w-24 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                                         <div
                                             className="h-full bg-blue-500 dark:bg-blue-600 rounded-full"
                                             style={{
-                                                width: `${(counts.likes / (counts.likes + counts.dislikes)) * 100}%`,
+                                                width: `${(likesCount / (likesCount + dislikesCount)) * 100}%`,
                                                 transition: 'width 0.3s ease-in-out'
                                             }}
                                         ></div>
