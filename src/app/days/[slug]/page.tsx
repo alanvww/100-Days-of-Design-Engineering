@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getMarkdownContent, getProject, getNumberOfDays } from '@/lib/markdown';
+import { getMarkdownContentAction, getProjectAction, getNumberOfDaysAction } from '@/app/actions/projects'; // Updated import
 import { Metadata } from 'next';
 import { Navbar } from '@/components/ui/Navbar';
 import { Footer } from '@/components/ui/Footer';
@@ -9,8 +9,9 @@ import ElementShowcase from '@/components/ElementShowcase';
 import { Suspense } from 'react';
 import Loading from './loading';
 import { ProjectFrontmatter } from '@/lib/markdown';
-import * as motion from "motion/react-client"
+import * as motion from "motion/react-client";
 import FeedbackBar from '@/components/FeedbackBar';
+import { getFeedbackCounts } from '@/app/actions/feedback'; // Import the server action
 
 
 type Params = Promise<{ slug: string }>;
@@ -31,17 +32,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 function PageContent({
-    slug,
-    project,
-    content,
-    dayNumber,
-    totalDays
+	slug,
+	project,
+	content,
+	dayNumber,
+	totalDays,
+	initialLikes, // Add to destructuring
+	initialDislikes // Add to destructuring
 }: {
     slug: string;
     project: ProjectFrontmatter;
-    content: string;
-    dayNumber: number;
-    totalDays: number;
+	content: string;
+	dayNumber: number;
+	totalDays: number;
+	initialLikes: number; // Add new prop
+	initialDislikes: number; // Add new prop
 }) {
     return (
         <div className="min-h-screen flex flex-col bg-background text-foreground dark:bg-gray-900 dark:text-white transition-colors duration-300">
@@ -102,11 +107,17 @@ function PageContent({
                         className="mt-16"
                     />
 
-                    {/* Feedback Bar */}
-                    <div className="mt-12 mb-8">
-                        <FeedbackBar dayId={dayNumber} showCounts={true} color={project?.color} />
-                    </div>
-                </article>
+					{/* Feedback Bar - Pass initial counts */}
+					<div className="mt-12 mb-8">
+						<FeedbackBar
+							dayId={dayNumber}
+							showCounts={true}
+							color={project?.color}
+							initialLikes={initialLikes} // Pass prop
+							initialDislikes={initialDislikes} // Pass prop
+						/>
+					</div>
+				</article>
             </main>
             <Footer />
         </div>
@@ -116,9 +127,9 @@ function PageContent({
 export default async function DayPage({ params }: PageProps) {
     const resolvedParams = await params;
     const slug = resolvedParams.slug;
-    const project = await getProject(slug);
-    const content = await getMarkdownContent(slug);
-    const totalDays = await getNumberOfDays();
+    const project = await getProjectAction(slug); // Use action
+    const content = await getMarkdownContentAction(slug); // Use action
+    const totalDays = await getNumberOfDaysAction(); // Use action
 
     const dayNumber = parseInt(slug, 10);
 
@@ -127,18 +138,23 @@ export default async function DayPage({ params }: PageProps) {
     }
 
     if (!content && !project) {
-        notFound();
-    }
+		notFound();
+	}
 
-    return (
-        <Suspense fallback={<Loading />}>
-            {(project && content) ? <PageContent
+	// Fetch initial feedback counts here using the server action
+	const { likes: initialLikes, dislikes: initialDislikes } = await getFeedbackCounts(dayNumber);
+
+	return (
+		<Suspense fallback={<Loading />}>
+			{(project && content) ? <PageContent
                 slug={slug}
                 project={project}
-                content={content}
-                dayNumber={dayNumber}
-                totalDays={totalDays}
-            /> : <Loading />}
-        </Suspense>
+				content={content}
+				dayNumber={dayNumber}
+				totalDays={totalDays}
+				initialLikes={initialLikes} // Pass fetched counts
+				initialDislikes={initialDislikes} // Pass fetched counts
+			/> : <Loading />}
+		</Suspense>
     );
 }

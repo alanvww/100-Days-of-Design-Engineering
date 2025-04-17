@@ -1,18 +1,14 @@
 
-import { getAllProjects } from '@/lib/markdown';
+import { getAllProjectsAction } from '@/app/actions/projects';
+import { ProjectFrontmatter } from '@/lib/markdown';
 import { Footer } from "@/components/ui/Footer";
 import { Navbar } from "@/components/ui/Navbar";
 import ProjectViewSwitcher from "@/components/ProjectViewSwitcher";
-import { Project } from "@/types/ProjectTypes";
 import * as motion from "motion/react-client";
 
-async function getProjects(): Promise<Project[]> {
-    const projects = await getAllProjects();
-    return projects;
-}
 
 export default async function Home() {
-    const projects = await getProjects();
+    const projects: ProjectFrontmatter[] = await getAllProjectsAction();
 
     return (
         <div className="min-h-screen flex flex-col bg-background text-foreground dark:bg-gray-900 dark:text-white transition-colors duration-300">

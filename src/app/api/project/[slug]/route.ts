@@ -1,4 +1,4 @@
-import { getProject } from '@/lib/markdown';
+import { getProjectAction } from '@/app/actions/projects'; // Updated import
 import { NextRequest, NextResponse } from 'next/server';
 
 type Props = {
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest, props: Props) {
 		const cleanSlug = slug.replace(/\D/g, '');
 
 		// Fetch project data
-		const project = await getProject(cleanSlug);
+		const project = await getProjectAction(cleanSlug); // Use action
 
 		if (!project) {
 			return NextResponse.json({ error: 'Project not found' }, { status: 404 });
