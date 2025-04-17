@@ -148,7 +148,7 @@ const ProjectPaginator: React.FC<PaginatedProjectsProps> = ({ projects }) => {
                         variants={itemVariants}
                         custom={index}
                     >
-                        <ProjectCard project={project} index={index} />
+                        <ProjectCard project={project} />
                     </motion.div>
                 ))}
             </motion.section>

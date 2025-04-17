@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { XLogo, LinkedinLogo, GithubLogo, Envelope } from '@phosphor-icons/react';
 
 // types/index.ts

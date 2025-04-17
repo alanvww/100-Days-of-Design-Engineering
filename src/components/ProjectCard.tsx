@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Link } from 'next-view-transitions'
 import { Project } from "@/types/ProjectTypes";
 import { Suspense } from "react";
-import * as motion from "motion/react-client";
+import { motion } from "motion/react";
 
 // Utility functions for generating color data URL
 const keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -47,12 +47,11 @@ const ProjectCardSkeleton = () => (
 );
 
 interface ProjectCardProps {
-    project: Project;
+    project: Project; // Assuming Project type has a color property of type string
     className?: string;
-    index?: number; // Add index for priority loading
 }
 
-const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className, index = 0 }) => {
+const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className }) => {
     // Convert hex color to RGB and generate data URL
     const rgb = hexToRGB(project.color);
     const blurDataURL = rgbDataURL(rgb.r, rgb.g, rgb.b);
@@ -109,18 +108,8 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className, in
         }
     };
 
-    // Determine if this image should be prioritized
-    const isPriority = index < 8; // Prioritize first 8 images (visible on initial screen)
-
-    // Determine fetch priority based on index
-    const fetchPriority = index < 4 ? "high" : (index < 12 ? "auto" : "low");
-
     return (
-        <Link
-            href={`/days/${project.day}`}
-            className="cursor-pointer px-2 md:px-4 min-w-full w-60 md:w-80"
-            style={{ viewTransitionName: `project-${project.day}` }}
-        >
+        <Link href={`/days/${project.day}`} className="cursor-pointer px-2 md:px-4 min-w-full w-60 md:w-80">
             <motion.div
                 className="cursor-pointer px-2 md:px-4 min-w-full"
                 initial="hidden"
@@ -135,14 +124,12 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className, in
                         alt={`Day ${project.day}`}
                         width={400}
                         height={400}
-                        quality={isPriority ? 85 : 75} // Higher quality for visible images
-                        sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw" // Responsive sizing
+                        quality={50}
+                        sizes="(min-width: 640px) 400px, 100vw"
                         className="object-cover w-full h-full"
-                        priority={isPriority}
+                        priority={true}
                         placeholder='blur'
                         blurDataURL={blurDataURL}
-                        fetchPriority={fetchPriority as "high" | "low" | "auto"} // New in Next.js 15
-                        loading={isPriority ? "eager" : "lazy"}
                     />
                     <motion.div
                         className="absolute inset-0"
@@ -172,8 +159,8 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className, in
     );
 };
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index = 0 }) => (
+export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => (
     <Suspense fallback={<ProjectCardSkeleton />}>
-        <ProjectCardContent project={project} index={index} />
+        <ProjectCardContent project={project} />
     </Suspense>
 );
