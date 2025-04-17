@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from 'next-view-transitions'
 import { Project } from "@/types/ProjectTypes";
 import { Suspense } from "react";
 import * as motion from "motion/react-client";
@@ -118,7 +118,6 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className, in
     return (
         <Link
             href={`/days/${project.day}`}
-            scroll={false}
             className="cursor-pointer px-2 md:px-4 min-w-full w-60 md:w-80"
             style={{ viewTransitionName: `project-${project.day}` }}
         >
