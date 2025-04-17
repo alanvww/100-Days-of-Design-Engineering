@@ -60,12 +60,12 @@ export function Navbar() {
                                     duration-300 text-muted-foreground hover:text-foreground data-[checked=true]:text-foreground 
                                     dark:text-white dark:hover:text-foreground bg-transparent  
                                     dark:data-[checked=true]:text-foreground "
-                            
+
                                 >
                                     <button
                                         type="button"
                                         className='cursor-pointer'
-                                         >
+                                    >
                                         {label}
                                         {isExternal && (
                                             <ExternalLink

@@ -114,31 +114,40 @@ function PageContent({
 }
 
 export default async function DayPage({ params }: PageProps) {
-    const resolvedParams = await params;
-    const slug = resolvedParams.slug;
+    // Static content that can be prerendered
+    return (
+        <>
+            <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
+
+
+                {/* Dynamic content in a suspense boundary */}
+                <Suspense fallback={<Loading />}>
+                    <DayContent params={params} />
+                </Suspense>
+
+            </div>
+        </>
+    );
+}
+
+async function DayContent({ params }: { params: Params }) {
+    const slug = (await params).slug;
     const project = await getProject(slug);
     const content = await getMarkdownContent(slug);
     const totalDays = await getNumberOfDays();
-
     const dayNumber = parseInt(slug, 10);
 
-    if (isNaN(dayNumber)) {
-        notFound();
-    }
-
-    if (!content && !project) {
+    if (isNaN(dayNumber) || (!content && !project)) {
         notFound();
     }
 
     return (
-        <Suspense fallback={<Loading />}>
-            {(project && content) ? <PageContent
-                slug={slug}
-                project={project}
-                content={content}
-                dayNumber={dayNumber}
-                totalDays={totalDays}
-            /> : <Loading />}
-        </Suspense>
+        <PageContent
+            slug={slug}
+            project={project!}
+            content={content!}
+            dayNumber={dayNumber}
+            totalDays={totalDays}
+        />
     );
 }

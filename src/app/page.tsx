@@ -1,18 +1,30 @@
-
 import { getAllProjects } from '@/lib/markdown';
 import { Footer } from "@/components/ui/Footer";
 import { Navbar } from "@/components/ui/Navbar";
 import ProjectViewSwitcher from "@/components/ProjectViewSwitcher";
 import { Project } from "@/types/ProjectTypes";
+import { Suspense } from "react";
 import * as motion from "motion/react-client";
+
+// Next.js 15 page props type with Promise for searchParams
+type PageProps = {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
 async function getProjects(): Promise<Project[]> {
     const projects = await getAllProjects();
     return projects;
 }
 
-export default async function Home() {
+export default async function Home({ searchParams }: PageProps) {
     const projects = await getProjects();
+
+    // Properly await the searchParams Promise
+    const resolvedSearchParams = await searchParams;
+    const pageParam = resolvedSearchParams.page;
+    const initialPage = pageParam && typeof pageParam === 'string'
+        ? parseInt(pageParam, 10)
+        : 1;
 
     return (
         <div className="min-h-screen flex flex-col bg-background text-foreground dark:bg-gray-900 dark:text-white transition-colors duration-300">
@@ -47,7 +59,12 @@ export default async function Home() {
                     </motion.p>
                 </div>
 
-                <ProjectViewSwitcher projects={projects} />
+                <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading projects...</div>}>
+                    <ProjectViewSwitcher
+                        projects={projects}
+                        initialPage={initialPage}
+                    />
+                </Suspense>
             </main>
 
             <Footer />
