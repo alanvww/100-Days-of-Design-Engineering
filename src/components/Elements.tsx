@@ -2407,6 +2407,14 @@ export default WeatherCard;
 `,
         day: 84
     },
+    {
+        name: 'Frosted Glass Tiles',
+        component: (
+            <UnicornStudioWrapper link='https://www.unicorn.studio/embed/GG8f4hZkDboEanw1R5w4' />
+        ),
+        code: ``,
+        day: 85
+    },
 ];
 
 
