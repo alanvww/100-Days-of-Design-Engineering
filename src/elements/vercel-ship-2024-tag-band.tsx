@@ -1,8 +1,8 @@
 import * as THREE from 'three'
-import { useEffect, useRef, useState, useMemo } from 'react' // Added useMemo
+import { useEffect, useRef, useState, useMemo, Suspense } from 'react' // Added Suspense
 import { Canvas, extend, useThree, useFrame } from '@react-three/fiber'
 // Import Gltf type (corrected casing)
-import { useGLTF, useTexture, Environment, Lightformer, Gltf } from '@react-three/drei' // Gltf is the component, type is inferred or defined below
+import { useGLTF, useTexture, Environment, Lightformer, Gltf, Preload } from '@react-three/drei' // Gltf is the component, type is inferred or defined below
 // Import RigidBody component and RapierRigidBody type for refs
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint, type RapierRigidBody } from '@react-three/rapier' // Import the type directly
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline'
@@ -30,10 +30,16 @@ type LerpableRigidBody = RapierRigidBody & { lerped?: THREE.Vector3 }
 export default function TagComponent() {
   return (
     <Canvas camera={{ position: [0, 0, 13], fov: 25 }}>
+      {/* Preload assets for smoother loading (optional but good practice) */}
+      <Preload all />
+
       <ambientLight intensity={Math.PI} />
-      <Physics interpolate gravity={[0, -40, 0]} timeStep={1 / 60}>
-        <Band />
-      </Physics>
+      {/* Wrap the physics and Band component in Suspense to handle asset loading */}
+      <Suspense fallback={null}> {/* Fallback can be null or a simple placeholder mesh */}
+        <Physics interpolate gravity={[0, -40, 0]} timeStep={1 / 60}>
+          <Band />
+        </Physics>
+      </Suspense>
       <Environment background blur={0.75}>
         <color attach="background" args={['black']} />
         <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
@@ -46,27 +52,34 @@ export default function TagComponent() {
 }
 
 function Band({ maxSpeed = 50, minSpeed = 10 }) {
-  // Initialize band ref to point to the THREE.Mesh containing the MeshLine
-  const band = useRef<THREE.Mesh>(null)
-  // Use the imported RapierRigidBody type for refs
-  const fixed = useRef<RapierRigidBody>(null)
-  const j1 = useRef<RapierRigidBody>(null)
-  const j2 = useRef<RapierRigidBody>(null)
-  const j3 = useRef<RapierRigidBody>(null)
-  const card = useRef<RapierRigidBody>(null)
-  const vec = new THREE.Vector3()
-  const ang = new THREE.Vector3()
-  // Use Euler for rotation conversion
-  const euler = new THREE.Euler()
-  const dir = new THREE.Vector3()
-  const segmentProps = { type: 'dynamic' as const, canSleep: true, colliders: false as const, angularDamping: 2, linearDamping: 2 }
-  // Use the defined GLTFResult type with unknown assertion
-  const { nodes, materials } = useGLTF('/models/tag.glb') as unknown as GLTFResult
+  // Refs for physics bodies
+  const bandMeshRef = useRef<THREE.Mesh>(null); // Ref for the visual band mesh
+  const fixedRef = useRef<RapierRigidBody>(null); // Fixed anchor point
+  const joint1Ref = useRef<RapierRigidBody>(null); // First rope joint
+  const joint2Ref = useRef<RapierRigidBody>(null); // Second rope joint
+  const joint3Ref = useRef<RapierRigidBody>(null); // Third rope joint (connected to card)
+  const cardRef = useRef<RapierRigidBody>(null); // The draggable card
+
+  // Reusable THREE objects for calculations to avoid allocations in useFrame
+  const dragTargetPosition = useMemo(() => new THREE.Vector3(), []); // Target position during drag
+  const currentAngularVelocity = useMemo(() => new THREE.Vector3(), []); // To read current angular velocity
+  const cardEulerRotation = useMemo(() => new THREE.Euler(), []); // To convert card quaternion to Euler
+  const dragDirection = useMemo(() => new THREE.Vector3(), []); // Direction vector for drag projection
+
+  // Physics properties for rope segments
+  const segmentProps = { type: 'dynamic' as const, canSleep: true, colliders: false as const, angularDamping: 2, linearDamping: 2 };
+
+  // Constant for tilt correction factor
+  const TILT_CORRECTION_FACTOR = 0.25;
+
+  // Load assets (GLTF model and texture)
+  // Using 'unknown' assertion as useGLTF's generic type doesn't perfectly match the generated structure without explicit tooling like gltf-tsx
+  const { nodes, materials } = useGLTF('/models/tag.glb') as unknown as GLTFResult;
   const texture = useTexture('/models/band.png')
   const { width, height } = useThree((state) => state.size)
-  const [curve] = useState(() => new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()]))
-  const [dragged, drag] = useState<false | THREE.Vector3>(false)
-  const [hovered, hover] = useState(false)
+  const bandCurve = useMemo(() => new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()]), []);
+  const [dragOffset, setDragOffset] = useState<THREE.Vector3 | null>(null); // Store the offset vector from click point to card center
+  const [isHovered, setIsHovered] = useState(false);
 
   // Manually create geometry and material instances
   const lineGeo = useMemo(() => new MeshLineGeometry(), [])
@@ -80,117 +93,179 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     lineWidth: 1
   }), [width, height, texture]) // Recreate material if dimensions or texture change
 
-  // Set depthTest after material creation
   useEffect(() => {
-    lineMat.depthTest = false;
+    if (lineMat) {
+      lineMat.depthTest = false;
+    }
   }, [lineMat]);
 
   // Refs are now correctly typed with useRef<RapierRigidBodyType>
 
 
-  useRopeJoint(fixed as React.RefObject<RapierRigidBody>, j1 as React.RefObject<RapierRigidBody>, [[0, 0, 0], [0, 0, 0], 1]) // Cast refs
-  useRopeJoint(j1 as React.RefObject<RapierRigidBody>, j2 as React.RefObject<RapierRigidBody>, [[0, 0, 0], [0, 0, 0], 1]) // Cast refs
-  useRopeJoint(j2 as React.RefObject<RapierRigidBody>, j3 as React.RefObject<RapierRigidBody>, [[0, 0, 0], [0, 0, 0], 1]) // Cast refs
-  useSphericalJoint(j3 as React.RefObject<RapierRigidBody>, card as React.RefObject<RapierRigidBody>, [[0, 0, 0], [0, 1.45, 0]]) // Cast refs
+  // Setup physics joints between segments
+  // Casts are necessary here as the hook types might not perfectly align with useRef types
+  useRopeJoint(fixedRef as React.RefObject<RapierRigidBody>, joint1Ref as React.RefObject<RapierRigidBody>, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(joint1Ref as React.RefObject<RapierRigidBody>, joint2Ref as React.RefObject<RapierRigidBody>, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(joint2Ref as React.RefObject<RapierRigidBody>, joint3Ref as React.RefObject<RapierRigidBody>, [[0, 0, 0], [0, 0, 0], 1]);
+  useSphericalJoint(joint3Ref as React.RefObject<RapierRigidBody>, cardRef as React.RefObject<RapierRigidBody>, [[0, 0, 0], [0, 1.45, 0]]);
 
   useEffect(() => {
-    if (hovered) {
-      document.body.style.cursor = dragged ? 'grabbing' : 'grab'
-      return () => void (document.body.style.cursor = 'auto')
+    // Update cursor style based on hover and drag state
+    if (isHovered) {
+      document.body.style.cursor = dragOffset ? 'grabbing' : 'grab';
+      return () => void (document.body.style.cursor = 'auto');
     }
-  }, [hovered, dragged])
+  }, [isHovered, dragOffset]);
 
+  // --- Helper function to handle drag updates ---
+  const handleDrag = (state: import('@react-three/fiber').RootState) => {
+    if (!dragOffset || !cardRef.current) return;
+
+    // Project pointer position onto a plane at the card's approximate depth
+    dragTargetPosition.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
+    dragDirection.copy(dragTargetPosition).sub(state.camera.position).normalize();
+    // Simplified projection: find point along ray from camera through pointer
+    // at the same distance from the camera as the drag target initially was (implicitly)
+    dragTargetPosition.add(dragDirection.multiplyScalar(state.camera.position.length()));
+
+    // Wake up all bodies involved in the chain to ensure responsiveness
+    [cardRef, joint1Ref, joint2Ref, joint3Ref, fixedRef].forEach((ref) => ref.current?.wakeUp());
+
+    // Apply kinematic translation based on the calculated target position and initial offset
+    cardRef.current.setNextKinematicTranslation({
+      x: dragTargetPosition.x - dragOffset.x,
+      y: dragTargetPosition.y - dragOffset.y,
+      z: dragTargetPosition.z - dragOffset.z,
+    });
+  };
+
+  // --- Helper function to update physics-based elements (lerping, band curve, tilt) ---
+  const updatePhysicsAndBand = (delta: number) => {
+    // Ensure all required refs are available
+    const card = cardRef.current;
+    const fixed = fixedRef.current;
+    const j1 = joint1Ref.current as LerpableRigidBody | null; // Cast for potential lerped access
+    const j2 = joint2Ref.current as LerpableRigidBody | null; // Cast for potential lerped access
+    const j3 = joint3Ref.current;
+    const bandMesh = bandMeshRef.current;
+
+    if (!card || !fixed || !j1 || !j2 || !j3 || !bandMesh) return;
+
+    // --- Lerp intermediate joints for smoother visual band (jitter reduction) ---
+    [j1, j2].forEach((joint) => {
+      // Initialize lerped position if it doesn't exist
+      if (!joint.lerped) {
+        joint.lerped = new THREE.Vector3().copy(joint.translation());
+      }
+
+      // Calculate lerp factor based on distance to reduce jitter when stretched
+      const distance = joint.lerped.distanceTo(joint.translation());
+      const clampedDistance = Math.max(0.1, Math.min(1, distance)); // Clamp distance for stability
+      const lerpFactor = delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed));
+
+      // Lerp the visual position towards the actual physics position
+      joint.lerped.lerp(joint.translation(), lerpFactor);
+    });
+
+    // --- Update Band Curve ---
+    // Get current positions (using lerped positions for intermediate joints)
+    const p0 = j3.translation();
+    const p1 = j2.lerped ?? j2.translation(); // Use lerped position if available
+    const p2 = j1.lerped ?? j1.translation(); // Use lerped position if available
+    const p3 = fixed.translation();
+
+    // Update the points of the CatmullRomCurve3
+    bandCurve.points[0].copy(p0);
+    bandCurve.points[1].copy(p1);
+    bandCurve.points[2].copy(p2);
+    bandCurve.points[3].copy(p3);
+
+    // Update the MeshLine geometry if it exists and is the correct type
+    if (bandMesh.geometry instanceof MeshLineGeometry) {
+      bandMesh.geometry.setPoints(bandCurve.getPoints(32)); // Update geometry with new curve points
+    }
+
+    // --- Card Tilt Correction ---
+    // Apply a slight angular velocity to tilt the card back towards the screen
+    currentAngularVelocity.copy(card.angvel()); // Get current angular velocity
+    const cardRotation = card.rotation(); // Get current rotation quaternion {w, x, y, z}
+
+    // Convert quaternion to Euler angles (using the pre-allocated Euler object)
+    cardEulerRotation.setFromQuaternion(
+      // Create a temporary Quaternion instance for the conversion
+      // Note: Ideally, avoid allocation here if possible, but Quaternion constructor is needed
+      new THREE.Quaternion(cardRotation.x, cardRotation.y, cardRotation.z, cardRotation.w),
+      'XYZ' // Specify Euler order
+    );
+
+    // Apply corrective angular velocity on the Y-axis
+    card.setAngvel(
+      {
+        x: currentAngularVelocity.x,
+        y: currentAngularVelocity.y - cardEulerRotation.y * TILT_CORRECTION_FACTOR, // Apply correction based on Y rotation
+        z: currentAngularVelocity.z,
+      },
+      true // Wake up the body
+    );
+  };
+
+
+  // --- Main Frame Loop ---
   useFrame((state, delta) => {
-    if (dragged && card.current) {
-      vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera)
-      dir.copy(vec).sub(state.camera.position).normalize()
-      vec.add(dir.multiplyScalar(state.camera.position.length()))
-        ;[card, j1, j2, j3, fixed].forEach((ref) => ref.current?.wakeUp())
-      // Ensure dragged is a Vector3 before accessing components
-      if (dragged instanceof THREE.Vector3) {
-        card.current.setNextKinematicTranslation({ x: vec.x - dragged.x, y: vec.y - dragged.y, z: vec.z - dragged.z })
-      }
-    }
+    handleDrag(state);
+    updatePhysicsAndBand(delta);
+  });
 
-    if (fixed.current && j1.current && j2.current && j3.current && card.current && band.current) {
-      // Fix most of the jitter when over pulling the card
-      ;[j1, j2].forEach((ref) => {
-        // Use the augmented type LerpableRigidBody
-        const currentRef = ref.current as LerpableRigidBody
-        if (!currentRef) return;
-        if (!currentRef.lerped) currentRef.lerped = new THREE.Vector3().copy(currentRef.translation())
-        const clampedDistance = Math.max(0.1, Math.min(1, currentRef.lerped.distanceTo(currentRef.translation())))
-        currentRef.lerped.lerp(currentRef.translation(), delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed)))
-      })
-
-      // Calculate catmul curve points safely
-      const p0 = j3.current.translation()
-      // Use the augmented type and optional chaining safely
-      const p1 = (j2.current as LerpableRigidBody)?.lerped ?? j2.current.translation()
-      const p2 = (j1.current as LerpableRigidBody)?.lerped ?? j1.current.translation()
-      const p3 = fixed.current.translation()
-
-
-      curve.points[0].copy(p0)
-      curve.points[1].copy(p1)
-      curve.points[2].copy(p2)
-      curve.points[3].copy(p3)
-
-      // Check if band.current and its geometry exist, then cast geometry to MeshLineGeometry
-      // Geometry is now directly the MeshLineGeometry instance
-      if (band.current?.geometry instanceof MeshLineGeometry) {
-        band.current.geometry.setPoints(curve.getPoints(32))
-      }
-
-      // Tilt it back towards the screen
-      ang.copy(card.current.angvel())
-      const cardRotation = card.current.rotation(); // This is { w, x, y, z }
-      // Create a Quaternion instance from the rotation object
-      const quat = new THREE.Quaternion(cardRotation.x, cardRotation.y, cardRotation.z, cardRotation.w);
-      // Use Euler instance for conversion from the Quaternion
-      euler.setFromQuaternion(quat, 'XYZ'); // Use appropriate Euler order
-      card.current.setAngvel({ x: ang.x, y: ang.y - euler.y * 0.25, z: ang.z }, true)
-    }
-  })
-
-  curve.curveType = 'chordal'
+  bandCurve.curveType = 'chordal'; // Use chordal curve type for smoother results
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping
 
   return (
     <>
       <group position={[0, 4, 0]}>
-        <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-        <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
+        {/* Physics Bodies */}
+        <RigidBody ref={fixedRef} {...segmentProps} type="fixed" />
+        <RigidBody position={[0.5, 0, 0]} ref={joint1Ref} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps}>
+        <RigidBody position={[1, 0, 0]} ref={joint2Ref} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps}>
+        <RigidBody position={[1.5, 0, 0]} ref={joint3Ref} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
+        <RigidBody
+          position={[2, 0, 0]}
+          ref={cardRef}
+          {...segmentProps}
+          type={dragOffset ? 'kinematicPosition' : 'dynamic'} // Switch to kinematic when dragged
+        >
           <CuboidCollider args={[0.8, 1.125, 0.01]} />
+          {/* Visual representation of the card (Group for interaction) */}
           <group
             scale={2.25}
             position={[0, -1.2, -0.05]}
-            onPointerOver={() => hover(true)}
-            onPointerOut={() => hover(false)}
+            onPointerOver={() => setIsHovered(true)}
+            onPointerOut={() => setIsHovered(false)}
             onPointerUp={(e) => {
-              (e.target as HTMLElement).releasePointerCapture(e.pointerId)
-              drag(false)
+              // Check if target has releasePointerCapture method before calling
+              if (typeof (e.target as Element)?.releasePointerCapture === 'function') {
+                (e.target as Element).releasePointerCapture(e.pointerId);
+              }
+              setDragOffset(null); // End drag
             }}
-            // Add type assertion for the event from R3F pointer events
             onPointerDown={(e: import('@react-three/fiber').ThreeEvent<PointerEvent>) => {
-              if (!card.current) return;
-              // Stop propagation to prevent other event listeners (like camera controls)
-              e.stopPropagation();
-              (e.target as HTMLElement).setPointerCapture(e.pointerId)
-              const currentCardPos = card.current.translation();
-              // e.point is already a Vector3 in R3F events
+              if (!cardRef.current) return;
+              e.stopPropagation(); // Prevent camera controls interference
+              // Check if target has setPointerCapture method before calling
+              if (typeof (e.target as Element)?.setPointerCapture === 'function') {
+                (e.target as Element).setPointerCapture(e.pointerId);
+              }
+              // Calculate the offset from the click point to the card's center
+              const currentCardPos = cardRef.current.translation();
               const offset = new THREE.Vector3().copy(e.point).sub(currentCardPos);
-              drag(offset); // Store the offset vector
-            }}>
+              setDragOffset(offset); // Start drag, storing the offset
+            }}
+          >
             {/* Use the typed nodes and materials directly */}
             <mesh geometry={nodes.card.geometry}>
               <meshPhysicalMaterial map={materials.base.map} map-anisotropy={16} clearcoat={1} clearcoatRoughness={0.15} roughness={0.3} metalness={0.5} />
@@ -200,9 +275,8 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
           </group>
         </RigidBody>
       </group>
-      {/* Ref points to the mesh */}
-      {/* Pass manually created geometry and material */}
-      <mesh ref={band} geometry={lineGeo} material={lineMat} />
+      {/* Visual Band Mesh */}
+      <mesh ref={bandMeshRef} geometry={lineGeo} material={lineMat} />
     </>
   )
 }

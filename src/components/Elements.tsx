@@ -2417,7 +2417,7 @@ export default WeatherCard;
         day: 85
     },
     {
-        name: '3D ID Card',
+        name: 'Vercel Ship 2024',
         component: (
             <div className='aspect-square width-full flex items-center justify-center'>
                 <TagComponent />
