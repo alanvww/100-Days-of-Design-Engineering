@@ -16,6 +16,7 @@ import VerticalMenuComponent from '@/elements/vertical-menu';
 import { MouseTrailText } from '@/elements/mouse-trail-text';
 import HoldButtonDemo from '@/elements/hold-button-demo';
 import WeatherCard from '@/elements/weather-card';
+import TagComponent from '@/elements/vercel-ship-2024-tag-band';
 
 interface UIElement {
     name: string;
@@ -2414,6 +2415,16 @@ export default WeatherCard;
         ),
         code: ``,
         day: 85
+    },
+    {
+        name: '3D ID Card',
+        component: (
+            <div className='aspect-square width-full flex items-center justify-center'>
+                <TagComponent />
+            </div>
+        ),
+        code: ``,
+        day: 86
     },
 ];
 
