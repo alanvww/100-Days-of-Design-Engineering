@@ -17,6 +17,7 @@ import { MouseTrailText } from '@/elements/mouse-trail-text';
 import HoldButtonDemo from '@/elements/hold-button-demo';
 import WeatherCard from '@/elements/weather-card';
 import TagComponent from '@/elements/vercel-ship-2024-tag-band';
+import CornerButton from '@/elements/corner-button';
 
 interface UIElement {
     name: string;
@@ -2425,6 +2426,17 @@ export default WeatherCard;
         ),
         code: ``,
         day: 86
+    },
+    {
+        name: 'Corner Button',
+        component: (
+            <div className='aspect-square width-full flex items-center justify-center'>
+
+                <CornerButton />
+            </div>
+        ),
+        code: ``,
+        day: 87
     },
 ];
 
