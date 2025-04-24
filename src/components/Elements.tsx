@@ -18,6 +18,7 @@ import HoldButtonDemo from '@/elements/hold-button-demo';
 import WeatherCard from '@/elements/weather-card';
 import TagComponent from '@/elements/vercel-ship-2024-tag-band';
 import CornerButton from '@/elements/corner-button';
+import ContainerQueryButton from '@/elements/container-query-button';
 
 interface UIElement {
     name: string;
@@ -2431,12 +2432,137 @@ export default WeatherCard;
         name: 'Corner Button',
         component: (
             <div className='aspect-square width-full flex items-center justify-center'>
-
                 <CornerButton />
             </div>
         ),
         code: ``,
         day: 87
+    },
+    {
+        name: 'container query button',
+        component: (
+            <div className='aspect-square width-full flex items-center justify-center'>
+                <ContainerQueryButton />
+            </div>
+        ),
+        code: `/* container-query-button.module.css */
+.buttonWrapper {
+	position: relative;
+	width: 12rem;
+	height: 4rem;
+	container-type: size; /* Query both inline and block size */
+	container-name: button-container; /* Optional: name the container */
+}
+
+.buttonLink {
+	/* Define variables for corner dimensions and calculated offset */
+	--corner-size: 0.75rem;
+	--corner-offset: 0.25rem;
+	/* NEW: Calculate the offset needed for travel without border */
+	--corner-travel-offset: calc(2 * var(--corner-offset) + var(--corner-size));
+
+	display: inline-flex; /* Use flex for centering */
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	position: relative; /* For positioning corners */
+	cursor: pointer;
+	/* REMOVED: border: 1px solid hsl(var(--border)); */
+	background-color: hsl(var(--secondary));
+	color: hsl(var(--foreground));
+	font-weight: bold;
+	text-decoration: none;
+	transition: background-color 300ms;
+}
+
+.buttonLink:hover {
+	background-color: hsl(var(--muted));
+}
+
+.corner {
+	position: absolute;
+	width: var(--corner-size);
+	height: var(--corner-size);
+	font-size: 1rem;
+	line-height: var(--corner-size);
+	text-align: center;
+	color: hsl(var(--muted-foreground));
+	transition: transform 300ms ease-in-out;
+}
+
+.topLeft {
+	top: var(--corner-offset);
+	left: var(--corner-offset);
+}
+
+.topRight {
+	top: var(--corner-offset);
+	right: var(--corner-offset);
+}
+
+.bottomLeft {
+	bottom: var(--corner-offset);
+	left: var(--corner-offset);
+}
+
+.bottomRight {
+	bottom: var(--corner-offset);
+	right: var(--corner-offset);
+}
+
+/* Hover Animations using Container Query Units and CSS Variables */
+.buttonLink:hover .topLeft {
+	transform: translateX(calc(100cqi - var(--corner-travel-offset)));
+}
+
+.buttonLink:hover .topRight {
+	transform: translateY(calc(100cqb - var(--corner-travel-offset)));
+}
+
+.buttonLink:hover .bottomRight {
+	transform: translateX(calc(-100cqi + var(--corner-travel-offset)));
+}
+
+.buttonLink:hover .bottomLeft {
+	transform: translateY(calc(-100cqb + var(--corner-travel-offset)));
+}
+
+
+------------------------------------------------
+
+// container-query-button.tsx
+import React from 'react';
+import styles from './container-query-button.module.css';
+import { cn } from '@/lib/utils';
+
+const ContainerQueryButton = () => {
+  return (
+    <div className={styles.buttonWrapper}>
+      <a href="#" className={styles.buttonLink}>
+        <span>Hover Me</span>
+
+        {/* Top Left Corner -> Top Right */}
+        <span className={cn(styles.corner, styles.topLeft)}>+</span>
+
+        {/* Top Right Corner -> Bottom Right */}
+        <span className={cn(styles.corner, styles.topRight)}>+</span>
+
+        {/* Bottom Right Corner -> Bottom Left */}
+        <span className={cn(styles.corner, styles.bottomRight)}>+</span>
+
+        {/* Bottom Left Corner -> Top Left */}
+        <span className={cn(styles.corner, styles.bottomLeft)}>+</span>
+      </a>
+    </div>
+  );
+};
+
+export default ContainerQueryButton;
+
+
+`,
+        day: 88
     },
 ];
 
