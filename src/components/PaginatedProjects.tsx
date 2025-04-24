@@ -9,6 +9,7 @@ import { motion } from "motion/react";
 import {
     Pagination,
     PaginationContent,
+    PaginationEllipsis, // Import PaginationEllipsis
     PaginationItem,
     PaginationLink,
     PaginationNext,
@@ -19,6 +20,7 @@ interface ProjectPaginationProps {
     currentPage: number;
     totalPages: number;
     onPageChange: (page: number) => void;
+    siblingCount?: number; // Optional: Number of pages around the current page
 }
 
 interface PaginatedProjectsProps {
@@ -30,10 +32,10 @@ const ITEMS_PER_PAGE = 12;
 const ProjectPagination: React.FC<ProjectPaginationProps> = ({
     currentPage,
     totalPages,
-    onPageChange
+    onPageChange,
+    siblingCount = 1 // Default to 1 sibling page on each side
 }) => {
     const router = useTransitionRouter();
-    const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     const handlePageClick = (e: React.MouseEvent<HTMLAnchorElement>, page: number) => {
         e.preventDefault();
@@ -44,6 +46,51 @@ const ProjectPagination: React.FC<ProjectPaginationProps> = ({
             router.push(url.pathname + url.search);
         }
     };
+
+    // Logic to generate pagination range with ellipses
+    const paginationRange = (): (number | '...')[] => {
+        const totalPageNumbers = siblingCount + 5; // siblingCount + firstPage + lastPage + currentPage + 2*ellipsis
+
+        // Case 1: Number of pages is less than the page numbers we want to show
+        if (totalPageNumbers >= totalPages) {
+            return Array.from({ length: totalPages }, (_, i) => i + 1);
+        }
+
+        const leftSiblingIndex = Math.max(currentPage - siblingCount, 1);
+        const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages);
+
+        // We do not show dots just when there is just one page number to be inserted between the extremes of sibling and the page limits i.e 1 and totalPages.
+        const shouldShowLeftDots = leftSiblingIndex > 2;
+        const shouldShowRightDots = rightSiblingIndex < totalPages - 1;
+
+        const firstPageIndex = 1;
+        const lastPageIndex = totalPages;
+
+        // Case 2: No left dots to show, but right dots to be shown
+        if (!shouldShowLeftDots && shouldShowRightDots) {
+            const leftItemCount = 2 + 2 * siblingCount;
+            const leftRange = Array.from({ length: leftItemCount }, (_, i) => i + 1);
+            return [...leftRange, '...', totalPages];
+        }
+
+        // Case 3: No right dots to show, but left dots to be shown
+        if (shouldShowLeftDots && !shouldShowRightDots) {
+            const rightItemCount = 2 + 2 * siblingCount;
+            const rightRange = Array.from({ length: rightItemCount }, (_, i) => totalPages - rightItemCount + 1 + i);
+            return [firstPageIndex, '...', ...rightRange];
+        }
+
+        // Case 4: Both left and right dots to be shown
+        if (shouldShowLeftDots && shouldShowRightDots) {
+            const middleRange = Array.from({ length: rightSiblingIndex - leftSiblingIndex + 1 }, (_, i) => leftSiblingIndex + i);
+            return [firstPageIndex, '...', ...middleRange, '...', lastPageIndex];
+        }
+
+        // Default case (should not happen with the logic above, but for safety)
+        return Array.from({ length: totalPages }, (_, i) => i + 1);
+    };
+
+    const pages = paginationRange();
 
     return (
         <Pagination className="my-2 py-6">
@@ -57,17 +104,21 @@ const ProjectPagination: React.FC<ProjectPaginationProps> = ({
                     />
                 </PaginationItem>
 
-                {pages.map((page) => (
-                    <PaginationItem key={page}>
-                        <PaginationLink
-                            href="#"
-                            onClick={(e) => handlePageClick(e, page)}
-                            isActive={currentPage === page}
-                            aria-current={currentPage === page ? "page" : undefined}
-                            className={currentPage === page ? "dark:bg-gray-800 dark:border-gray-700 dark:text-white " : ""}
-                        >
-                            {page}
-                        </PaginationLink>
+                {pages.map((page, index) => (
+                    <PaginationItem key={index}>
+                        {page === '...' ? (
+                            <PaginationEllipsis />
+                        ) : (
+                            <PaginationLink
+                                href="#"
+                                onClick={(e) => handlePageClick(e, page as number)}
+                                isActive={currentPage === page}
+                                aria-current={currentPage === page ? "page" : undefined}
+                                className={currentPage === page ? "dark:bg-gray-800 dark:border-gray-700 dark:text-white " : ""}
+                            >
+                                {page}
+                            </PaginationLink>
+                        )}
                     </PaginationItem>
                 ))}
 
