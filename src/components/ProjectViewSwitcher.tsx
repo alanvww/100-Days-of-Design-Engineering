@@ -18,7 +18,7 @@ interface GroupedProjects {
 
 const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
   const [viewMode, setViewMode] = useState<'paginated' | 'carousel'>('paginated');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const groupedProjects = useMemo(() => {
     return projects.reduce((acc: GroupedProjects, project) => {
