@@ -2564,6 +2564,14 @@ export default ContainerQueryButton;
 `,
         day: 88
     },
+    {
+        name: 'Tiles #2',
+        component: (
+            <UnicornStudioWrapper link='https://www.unicorn.studio/embed/6ENgE1ehdVJcKuGlqsw7' />
+        ),
+        code: ``,
+        day: 90
+    },
 ];
 
 
