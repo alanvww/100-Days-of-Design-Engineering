@@ -75,7 +75,7 @@ function PageContent({
                     {/* Foreground title */}
                     <div className="relative md:my-32 my-20 w-3/4">
                         <motion.h1
-                            className="text-3xl md:text-8xl text-left text-gray-700 dark:text-white bg-blend-multiply px-2 md:px-8 transition-colors duration-300"
+                            className="text-4xl md:text-8xl text-left text-gray-700 dark:text-white bg-blend-multiply px-2 md:px-8 transition-colors duration-300"
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{

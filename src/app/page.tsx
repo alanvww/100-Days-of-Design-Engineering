@@ -16,7 +16,7 @@ export default async function Home() {
                 <div className="md:space-y-6 space-y-8 mb-12">
                     <Navbar />
                     <motion.h1
-                        className="text-3xl md:text-6xl text-left px-2 md:px-8"
+                        className="text-4xl md:text-6xl text-left px-2 md:px-8"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{
