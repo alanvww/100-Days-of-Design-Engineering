@@ -13,6 +13,7 @@ import * as motion from "motion/react-client";
 import FeedbackBar from '@/components/FeedbackBar';
 import { getFeedbackCounts } from '@/app/actions/feedback'; // Import the server action
 
+import { cn } from '@/lib/utils';
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -32,21 +33,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 function PageContent({
-	slug,
-	project,
-	content,
-	dayNumber,
-	totalDays,
-	initialLikes, // Add to destructuring
-	initialDislikes // Add to destructuring
+    slug,
+    project,
+    content,
+    dayNumber,
+    totalDays,
+    initialLikes, // Add to destructuring
+    initialDislikes // Add to destructuring
 }: {
     slug: string;
     project: ProjectFrontmatter;
-	content: string;
-	dayNumber: number;
-	totalDays: number;
-	initialLikes: number; // Add new prop
-	initialDislikes: number; // Add new prop
+    content: string;
+    dayNumber: number;
+    totalDays: number;
+    initialLikes: number; // Add new prop
+    initialDislikes: number; // Add new prop
 }) {
     return (
         <div className="min-h-screen flex flex-col bg-background text-foreground dark:bg-gray-900 dark:text-white transition-colors duration-300">
@@ -66,8 +67,15 @@ function PageContent({
                         }}
                     >
                         <div
-                            className="md:text-[8rem] text-right my-14 text-[3rem] text-gray-600 opacity-15 dark:opacity-80 tracking-tight leading-none transition-colors duration-300"
-                            style={{ color: project?.color }}
+                            className={cn(
+                                "md:text-[8rem] text-right my-14 text-[3rem] opacity-30 tracking-tight leading-none transition-colors duration-300",
+                                project?.color ? "text-[var(--accent-color-light)] dark:text-[var(--accent-color-dark)]" : "text-gray-600" // Fallback if no color
+                            )}
+                            style={project?.color ? {
+                                '--accent-color-base': project.color,
+                                '--accent-color-light': `color-mix(in srgb, ${project.color} 90%, black 10%)`,
+                                '--accent-color-dark': `color-mix(in srgb, ${project.color} 85%, white 15%)`
+                            } as React.CSSProperties : {}}
                         >
                             {project?.project}
                         </div>
@@ -107,17 +115,17 @@ function PageContent({
                         className="mt-16"
                     />
 
-					{/* Feedback Bar - Pass initial counts */}
-					<div className="mt-12 mb-8">
-						<FeedbackBar
-							dayId={dayNumber}
-							showCounts={true}
-							color={project?.color}
-							initialLikes={initialLikes} // Pass prop
-							initialDislikes={initialDislikes} // Pass prop
-						/>
-					</div>
-				</article>
+                    {/* Feedback Bar - Pass initial counts */}
+                    <div className="mt-12 mb-8">
+                        <FeedbackBar
+                            dayId={dayNumber}
+                            showCounts={true}
+                            color={project?.color}
+                            initialLikes={initialLikes} // Pass prop
+                            initialDislikes={initialDislikes} // Pass prop
+                        />
+                    </div>
+                </article>
             </main>
             <Footer />
         </div>
@@ -138,23 +146,23 @@ export default async function DayPage({ params }: PageProps) {
     }
 
     if (!content && !project) {
-		notFound();
-	}
+        notFound();
+    }
 
-	// Fetch initial feedback counts here using the server action
-	const { likes: initialLikes, dislikes: initialDislikes } = await getFeedbackCounts(dayNumber);
+    // Fetch initial feedback counts here using the server action
+    const { likes: initialLikes, dislikes: initialDislikes } = await getFeedbackCounts(dayNumber);
 
-	return (
-		<Suspense fallback={<Loading />}>
-			{(project && content) ? <PageContent
+    return (
+        <Suspense fallback={<Loading />}>
+            {(project && content) ? <PageContent
                 slug={slug}
                 project={project}
-				content={content}
-				dayNumber={dayNumber}
-				totalDays={totalDays}
-				initialLikes={initialLikes} // Pass fetched counts
-				initialDislikes={initialDislikes} // Pass fetched counts
-			/> : <Loading />}
-		</Suspense>
+                content={content}
+                dayNumber={dayNumber}
+                totalDays={totalDays}
+                initialLikes={initialLikes} // Pass fetched counts
+                initialDislikes={initialDislikes} // Pass fetched counts
+            /> : <Loading />}
+        </Suspense>
     );
 }

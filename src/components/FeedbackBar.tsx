@@ -103,13 +103,6 @@ export default function FeedbackBar({
 		? optimisticFeedback.feedbackType
 		: localFeedbackState.type;
 
-	// Style for buttons
-	const buttonStyle = color ? {
-		color: color,
-		borderColor: color,
-		borderWidth: '1px',
-	} as React.CSSProperties : {};
-
 	// Common handler logic
 	const handleFeedback = async (type: 'like' | 'dislike') => {
 		if (interactionDisabled) return;
@@ -163,8 +156,12 @@ export default function FeedbackBar({
 			<div className="flex flex-row max-w-full space-x-1 text-center justify-center items-center relative">
 				{/* Like Button */}
 				<motion.div
-					className={`h-18 min-w-36 ${interactionDisabled ? 'bg-gray-200 dark:bg-gray-800/50' : 'bg-white dark:bg-gray-800/20 '} rounded-l-full shadow flex justify-center items-center gap-2 px-4 ${interactionDisabled ? 'cursor-default opacity-70' : 'cursor-pointer'} ${!interactionDisabled ? 'border-2' : ''} ${optimisticFeedback.pending ? 'opacity-50' : ''}`}
-					style={!interactionDisabled ? buttonStyle : {}}
+					className={`h-18 min-w-36 ${interactionDisabled ? 'bg-gray-200 dark:bg-gray-800/50' : 'bg-white dark:bg-gray-800/20 '} rounded-l-full shadow flex justify-center items-center gap-2 px-4 ${interactionDisabled ? 'cursor-default opacity-70' : 'cursor-pointer'} ${!interactionDisabled && color ? 'border-2 border-[var(--accent-color-light)] dark:border-[var(--accent-color-dark)]' : !interactionDisabled ? 'border-2 border-transparent' : ''} ${optimisticFeedback.pending ? 'opacity-50' : ''}`}
+					style={!interactionDisabled && color ? {
+						'--accent-color-base': color,
+						'--accent-color-light': `color-mix(in srgb, ${color} 90%, black 10%)`,
+						'--accent-color-dark': `color-mix(in srgb, ${color} 85%, white 15%)`
+					} as React.CSSProperties : {}}
 					whileHover={!interactionDisabled ? { scale: 1.05 } : {}}
 					whileTap={!interactionDisabled ? { scale: 0.95 } : {}}
 					onClick={() => handleFeedback('like')}
@@ -174,10 +171,20 @@ export default function FeedbackBar({
 						<ThumbsUp
 							size={32}
 							weight={displayedFeedbackType === 'like' ? 'fill' : 'duotone'}
-							color={interactionDisabled ? (displayedFeedbackType === 'like' ? '#3B82F6' : '#9CA3AF') : `${color}`}
+							className={interactionDisabled
+								? (displayedFeedbackType === 'like' ? 'text-blue-500' : 'text-gray-400 dark:text-gray-500')
+								: color
+									? 'text-[var(--accent-color-light)] dark:text-[var(--accent-color-dark)]'
+									: 'text-gray-600 dark:text-gray-300' // Fallback color if no prop
+							}
 						/>
 					</div>
-					<div className={`${displayedFeedbackType === 'like' ? 'text-[#3B82F6]' : displayedFeedbackType === 'dislike' ? 'text-[#9CA3AF]' : ''} text-lg`}>
+					<div className={`text-lg ${interactionDisabled
+						? (displayedFeedbackType === 'like' ? 'text-blue-500' : 'text-gray-500 dark:text-gray-400')
+						: color
+							? 'text-[var(--accent-color-light)] dark:text-[var(--accent-color-dark)]'
+							: 'text-gray-700 dark:text-gray-200' // Fallback color
+						}`}>
 						{optimisticFeedback.likes}
 					</div>
 					<AnimatePresence>
@@ -198,8 +205,12 @@ export default function FeedbackBar({
 
 				{/* Dislike Button */}
 				<motion.div
-					className={`h-18 min-w-36 ${interactionDisabled ? 'bg-gray-200 dark:bg-gray-800/50' : 'bg-white dark:bg-gray-800/20 '} rounded-r-full shadow flex justify-center items-center gap-2 px-4 ${interactionDisabled ? 'cursor-default opacity-70' : 'cursor-pointer'} ${!interactionDisabled ? 'border-2' : ''} ${optimisticFeedback.pending ? 'opacity-50' : ''}`}
-					style={!interactionDisabled ? buttonStyle : {}}
+					className={`h-18 min-w-36 ${interactionDisabled ? 'bg-gray-200 dark:bg-gray-800/50' : 'bg-white dark:bg-gray-800/20 '} rounded-r-full shadow flex justify-center items-center gap-2 px-4 ${interactionDisabled ? 'cursor-default opacity-70' : 'cursor-pointer'} ${!interactionDisabled && color ? 'border-2 border-[var(--accent-color-light)] dark:border-[var(--accent-color-dark)]' : !interactionDisabled ? 'border-2 border-transparent' : ''} ${optimisticFeedback.pending ? 'opacity-50' : ''}`}
+					style={!interactionDisabled && color ? {
+						'--accent-color-base': color,
+						'--accent-color-light': `color-mix(in srgb, ${color} 90%, black 10%)`,
+						'--accent-color-dark': `color-mix(in srgb, ${color} 85%, white 15%)`
+					} as React.CSSProperties : {}}
 					whileHover={!interactionDisabled ? { scale: 1.05 } : {}}
 					whileTap={!interactionDisabled ? { scale: 0.95 } : {}}
 					onClick={() => handleFeedback('dislike')}
@@ -210,10 +221,20 @@ export default function FeedbackBar({
 						<ThumbsDown
 							size={32}
 							weight={displayedFeedbackType === 'dislike' ? 'fill' : 'duotone'}
-							color={interactionDisabled ? (displayedFeedbackType === 'dislike' ? '#A61228' : '#9CA3AF') : `${color}`}
+							className={interactionDisabled
+								? (displayedFeedbackType === 'dislike' ? 'text-red-600 dark:text-red-700' : 'text-gray-400 dark:text-gray-500')
+								: color
+									? 'text-[var(--accent-color-light)] dark:text-[var(--accent-color-dark)]'
+									: 'text-gray-600 dark:text-gray-300' // Fallback color
+							}
 						/>
 					</div>
-					<div className={`${displayedFeedbackType === 'dislike' ? 'text-[#A61228]' : displayedFeedbackType === 'like' ? 'text-[#9CA3AF]' : ''} text-lg`}>
+					<div className={`text-lg ${interactionDisabled
+						? (displayedFeedbackType === 'dislike' ? 'text-red-600 dark:text-red-700' : 'text-gray-500 dark:text-gray-400')
+						: color
+							? 'text-[var(--accent-color-light)] dark:text-[var(--accent-color-dark)]'
+							: 'text-gray-700 dark:text-gray-200' // Fallback color
+						}`}>
 						{optimisticFeedback.dislikes}
 					</div>
 				</motion.div>
