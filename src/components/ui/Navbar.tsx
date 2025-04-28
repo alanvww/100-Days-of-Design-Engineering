@@ -2,7 +2,7 @@ import AnimatedBackground from './animated-background';
 import { ExternalLink } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import ThemeSwitch from './ThemeSwitch';
-import FloatingMenu from '@/elements/floating-menu'; // Import the FloatingMenu
+import FloatingMenu from './FloatMenu'; // Import the FloatingMenu
 import { cn } from '@/lib/utils'; // Import cn
 
 const NAVIGATION_ITEMS = [
@@ -43,7 +43,7 @@ export function Navbar() {
                 <div className="w-full max-w-fit rounded-xl border border-border p-1 bg-white dark:bg-gray-800 dark:border-gray-700 transition-colors duration-300 mr-2">
                     <div className="flex overflow-x-auto">
                         <AnimatedBackground
-                            defaultValue={NAVIGATION_ITEMS[0].id}
+                            // defaultValue removed - active state now determined by path
                             className="whitespace-nowrap rounded-lg bg-muted dark:bg-gray-300"
                             transition={{
                                 type: 'spring',

@@ -1,6 +1,7 @@
 'use client';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, Transition, motion } from 'motion/react';
+import { usePathname } from 'next/navigation'; // Import usePathname
 import {
   Children,
   cloneElement,
@@ -8,13 +9,14 @@ import {
   useEffect,
   useState,
   useId,
+  useMemo, // Import useMemo
 } from 'react';
 
 export type AnimatedBackgroundProps = {
   children:
-  | ReactElement<{ 'data-id': string }>[]
-  | ReactElement<{ 'data-id': string }>;
-  defaultValue?: string;
+  | ReactElement<{ 'data-id': string; href?: string }>[] // Add href to child props type
+  | ReactElement<{ 'data-id': string; href?: string }>;
+  // defaultValue?: string; // Remove defaultValue
   onValueChange?: (newActiveId: string | null) => void;
   className?: string;
   transition?: Transition;
@@ -23,28 +25,53 @@ export type AnimatedBackgroundProps = {
 
 export default function AnimatedBackground({
   children,
-  defaultValue,
+  // defaultValue, // Remove defaultValue
   onValueChange,
   className,
   transition,
   enableHover = false,
 }: AnimatedBackgroundProps) {
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const pathname = usePathname(); // Get current pathname
   const uniqueId = useId();
 
-  const handleSetActiveId = (id: string | null) => {
-    setActiveId(id);
+  // Determine the ID corresponding to the current path
+  const activePathId = useMemo(() => {
+    let currentId: string | null = null;
+    Children.forEach(children, (child) => {
+      if (child.props.href === pathname) {
+        currentId = child.props['data-id'];
+      }
+    });
+    return currentId;
+  }, [pathname, children]);
 
-    if (onValueChange) {
-      onValueChange(id);
+  // State for visual highlight (includes hover)
+  const [visualActiveId, setVisualActiveId] = useState<string | null>(activePathId);
+
+  // Update visual state when path changes
+  useEffect(() => {
+    setVisualActiveId(activePathId);
+  }, [activePathId]);
+
+
+  const handleInteractionStart = (id: string | null) => {
+    if (enableHover) {
+      setVisualActiveId(id); // Set visual highlight on hover/focus
+    } else {
+      // If not hover-enabled, click sets the persistent state (though path change handles this now)
+      // We might not need onValueChange anymore unless used elsewhere
+      if (onValueChange) {
+        onValueChange(id);
+      }
     }
   };
 
-  useEffect(() => {
-    if (defaultValue !== undefined) {
-      setActiveId(defaultValue);
+  const handleInteractionEnd = () => {
+    if (enableHover) {
+      setVisualActiveId(activePathId); // Revert to path-based active ID on leave/blur
     }
-  }, [defaultValue]);
+  };
+
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return Children.map(children, (child: any, index) => {
@@ -52,11 +79,14 @@ export default function AnimatedBackground({
 
     const interactionProps = enableHover
       ? {
-        onMouseEnter: () => handleSetActiveId(id),
-        onMouseLeave: () => handleSetActiveId(null),
+        onMouseEnter: () => handleInteractionStart(id),
+        onMouseLeave: handleInteractionEnd,
+        onFocus: () => handleInteractionStart(id), // Add focus for accessibility
+        onBlur: handleInteractionEnd, // Add blur for accessibility
       }
       : {
-        onClick: () => handleSetActiveId(id),
+        // Click is handled by the Link component itself for navigation
+        // We rely on pathname change to update the active state
       };
 
     return cloneElement(
@@ -64,17 +94,19 @@ export default function AnimatedBackground({
       {
         key: index,
         className: cn('relative inline-flex', child.props.className),
-        'data-checked': activeId === id ? 'true' : 'false',
+        // Use activePathId for the persistent data attribute
+        'data-checked': activePathId === id ? 'true' : 'false',
         ...interactionProps,
       },
       <>
         <AnimatePresence initial={false}>
-          {activeId === id && (
+          {/* Use visualActiveId for the motion div */}
+          {visualActiveId === id && (
             <motion.div
               layoutId={`background-${uniqueId}`}
               className={cn('absolute inset-0', className)}
               transition={transition}
-              initial={{ opacity: defaultValue ? 1 : 0 }}
+              initial={{ opacity: 0 }} // Start transparent
               animate={{
                 opacity: 1,
               }}
@@ -84,7 +116,8 @@ export default function AnimatedBackground({
             />
           )}
         </AnimatePresence>
-        <div className='z-10'>{child.props.children}</div>
+        {/* Ensure content is above the background */}
+        <div className='relative z-10'>{child.props.children}</div>
       </>
     );
   });
