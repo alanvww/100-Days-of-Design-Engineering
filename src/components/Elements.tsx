@@ -19,6 +19,7 @@ import WeatherCard from '@/elements/weather-card';
 import TagComponent from '@/elements/vercel-ship-2024-tag-band';
 import CornerButton from '@/elements/corner-button';
 import ContainerQueryButton from '@/elements/container-query-button';
+import FloatingMenuShowcase from '@/elements/floating-menu';
 
 interface UIElement {
     name: string;
@@ -2571,6 +2572,14 @@ export default ContainerQueryButton;
         ),
         code: ``,
         day: 90
+    },
+    {
+        name: 'Float Menu',
+        component: (
+            <FloatingMenuShowcase align="right" />
+        ),
+        code: ``,
+        day: 93
     },
 ];
 

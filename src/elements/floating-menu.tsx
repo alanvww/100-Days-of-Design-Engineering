@@ -1,47 +1,49 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
+import AnimatedBackground from '@/components/ui/animated-background';
 import { List, X } from '@phosphor-icons/react';
-import { ExternalLink } from 'lucide-react'; // Correct import for ExternalLink
+import { ExternalLink } from 'lucide-react';
 import { Link } from 'next-view-transitions';
-import ThemeSwitch from '@/components/ui/ThemeSwitch'; // Assuming ThemeSwitch is here
-import { cn } from '@/lib/utils'; // Assuming utils path
+import ThemeSwitch from '@/components/ui/ThemeSwitch';
+import { cn } from '@/lib/utils';
 
-// Copied from Navbar.tsx - consider refactoring into a shared location later
 const NAVIGATION_ITEMS = [
     {
         id: 'home',
         label: 'Home',
-        href: '/',
+        href: '#', // Use '#' for showcase links
     },
     {
         id: 'resume',
         label: 'Resume',
-        href: 'https://link.alan.ooo/resume',
+        href: '#', // Use '#' for showcase links
     },
     {
         id: 'portfolio',
         label: 'Portfolio',
-        href: 'https://alan.ooo',
+        href: '#', // Use '#' for showcase links
     },
     {
         id: 'contact',
         label: 'Contact',
-        href: 'https://socials.alan.ooo/',
+        href: '#', // Use '#' for showcase links
     },
 ];
 
-// Copied from Navbar.tsx - consider refactoring into a shared location later
+// Keep local for showcase
 const isExternalLink = (href: string) => {
-    return href.startsWith('http') || href.startsWith('https') || href.startsWith('//');
+    // Simplified for showcase: assume internal links start with #
+    return !href.startsWith('#');
 };
 
 interface FloatingMenuProps {
     align?: 'left' | 'right';
 }
 
-export default function FloatingMenu({ align = 'right' }: FloatingMenuProps) {
+// Renaming component slightly to avoid conflict if imported elsewhere, though default export is fine.
+export default function FloatingMenuShowcase({ align = 'right' }: FloatingMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleMenu = () => setIsOpen(!isOpen);
@@ -49,18 +51,19 @@ export default function FloatingMenu({ align = 'right' }: FloatingMenuProps) {
     const alignmentClasses = align === 'left' ? 'left-4' : 'right-4';
 
     return (
-        <>
+        <div className="relative m-auto h-96 w-fit rounded-md overflow-hidden bg-background p-4 dark:bg-gray-900 dark:text-white">
+            <p className="text-sm text-muted-foreground mb-2">Floating Menu Showcase (Click the button)</p>
             {/* Floating Action Button */}
             <motion.button
                 onClick={toggleMenu}
                 className={cn(
-                    "fixed bottom-4 p-3 rounded-full shadow-lg z-50 transition-colors duration-300",
-                    "bg-white dark:bg-gray-800", // Match Navbar background
-                    "border border-border dark:border-gray-700", // Match Navbar border
-                    "text-foreground dark:text-white", // Adjust text color for contrast
+                    "absolute bottom-4 p-3 rounded-full shadow-lg z-50 transition-colors duration-300", // Use absolute positioning within container
+                    "bg-card dark:bg-gray-800", // Use card background
+                    "border border-border dark:border-gray-700",
+                    "text-foreground dark:text-white",
                     alignmentClasses
                 )}
-                whileHover={{ scale: 1.1 }} // Keep hover scale effect
+                whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 aria-label={isOpen ? "Close menu" : "Open menu"}
             >
@@ -86,45 +89,56 @@ export default function FloatingMenu({ align = 'right' }: FloatingMenuProps) {
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
                         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                         className={cn(
-                            "fixed bottom-20 mb-2 p-4 rounded-xl shadow-xl z-40 flex flex-col space-y-1",
-                            "bg-white dark:bg-gray-800", // Match Navbar background
-                            "border border-border dark:border-gray-700", // Match Navbar border
+                            "absolute bottom-20 mb-2 p-4 rounded-xl shadow-xl z-40 flex flex-col space-y-1", // Use absolute positioning
+                            "bg-card dark:bg-gray-800", // Use card background
+                            "border border-border dark:border-gray-700",
                             alignmentClasses
                         )}
                     >
-                        {/* Navigation Links */}
-                        <nav className="flex flex-col items-center space-y-2">
+                        {/* Navigation Links with Animated Background */}
+                        <AnimatedBackground
+                            className="whitespace-nowrap rounded-lg bg-muted/50 dark:bg-gray-700/50 p-1"
+                            transition={{
+                                type: 'spring',
+                                bounce: 0,
+                                duration: 0.3,
+                            }}
+                            enableHover
+                        >
                             {NAVIGATION_ITEMS.map(({ id, label, href }) => {
                                 const isExternal = isExternalLink(href);
                                 return (
-                                    <Link
+                                    <a
                                         key={id}
+                                        data-id={id}
                                         href={href}
                                         target={isExternal ? "_blank" : undefined}
                                         rel={isExternal ? "noopener noreferrer" : undefined}
-                                        className="group flex items-center text-sm font-medium text-muted-foreground hover:text-foreground dark:text-white dark:hover:text-foreground transition-colors w-fit px-2 py-1 rounded-md" // Added dark theme styles
-                                        onClick={() => setIsOpen(false)} // Close menu on link click
+                                        className="group flex w-full items-center justify-center cursor-pointer px-3 py-2 text-sm transition-all duration-300 text-muted-foreground hover:text-foreground data-[checked=true]:text-foreground dark:text-white dark:hover:text-foreground bg-transparent dark:data-[checked=true]:text-foreground rounded-md"
+                                        onClick={(e) => {
+                                            e.preventDefault(); // Prevent navigation in showcase
+                                            setIsOpen(false);
+                                        }}
                                     >
                                         {label}
                                         {isExternal && (
                                             <ExternalLink
-                                                className="ml-1 h-3 w-3 text-muted-foreground group-hover:text-foreground dark:text-white dark:group-hover:text-foreground" // Added dark theme styles for icon
+                                                className="inline-block ml-1 h-3 w-3 text-muted-foreground group-hover:text-foreground dark:text-white dark:group-hover:text-foreground"
                                                 strokeWidth={2}
                                             />
                                         )}
-                                    </Link>
+                                    </a>
                                 );
                             })}
-                        </nav>
+                        </AnimatedBackground>
 
                         {/* Theme Switch */}
-                        <div className="pt-2 border-t border-border flex justify-start">
-                            {/* Ensure ThemeSwitch is adapted or wrapped if needed for this layout */}
+                        <div className="pt-2 border-t border-border flex justify-start pointer-events-none">
                             <ThemeSwitch />
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
-        </>
+        </div>
     );
 }
