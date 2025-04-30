@@ -42,7 +42,6 @@ interface FloatingMenuProps {
     align?: 'left' | 'right';
 }
 
-// Renaming component slightly to avoid conflict if imported elsewhere, though default export is fine.
 export default function FloatingMenuShowcase({ align = 'right' }: FloatingMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
 
