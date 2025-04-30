@@ -73,7 +73,15 @@ export function Navbar() {
                                         href={href}
                                         target={isExternal ? "_blank" : undefined}
                                         rel={isExternal ? "noopener noreferrer" : undefined}
-                                        className="group cursor-pointer px-2 sm:px-3 py-2 text-sm md:text-base transition-all duration-300 text-muted-foreground hover:text-foreground data-[checked=true]:text-foreground dark:text-white dark:hover:text-foreground bg-transparent dark:data-[checked=true]:text-foreground"
+                                        className={cn(
+                                           "group relative cursor-pointer px-2 sm:px-3 py-2 text-sm md:text-base transition-colors duration-200 z-10", // Added relative and z-10
+                                           // Base text color (applies when not visually active)
+                                           "text-gray-900 dark:text-white",
+                                           // Text color when the background IS present (hovered or active+visually active)
+                                           // This color should contrast with the background (bg-muted dark:bg-gray-300)
+                                           "data-[visual-active=true]:text-gray-900 dark:data-[visual-active=true]:text-gray-900"
+                                           // No separate hover: needed as data-visual-active handles the hover state text color
+                                        )}
                                     >
                                         <button
                                             type="button"
@@ -159,7 +167,14 @@ export function Navbar() {
                                         href={href}
                                         target={isExternal ? "_blank" : undefined}
                                         rel={isExternal ? "noopener noreferrer" : undefined}
-                                        className="group flex w-full items-center justify-center cursor-pointer px-3 py-2 text-sm transition-all duration-300 text-muted-foreground hover:text-foreground data-[checked=true]:text-foreground dark:text-white dark:hover:text-foreground bg-transparent dark:data-[checked=true]:text-foreground rounded-md "
+                                        className={cn(
+                                           "group relative flex w-full items-center justify-center cursor-pointer px-3 py-2 text-sm transition-colors duration-200 rounded-md bg-transparent z-10", // Added relative and z-10
+                                           // Base text color (applies when not visually active)
+                                           "text-muted-foreground dark:text-white",
+                                           // Text color when the background IS present (hovered or active+visually active)
+                                           // This color should contrast with the background (bg-muted dark:bg-gray-300)
+                                           "data-[visual-active=true]:text-foreground dark:data-[visual-active=true]:text-foreground" // Using foreground for mobile active text
+                                        )}
                                         onClick={() => setIsOpen(false)} // Close menu on link click
                                     >
                                         <button

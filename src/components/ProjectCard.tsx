@@ -3,6 +3,7 @@ import { Link } from 'next-view-transitions'
 import { Project } from "@/types/ProjectTypes";
 import { Suspense } from "react";
 import { motion } from "motion/react";
+import { Scale } from "lucide-react";
 
 // Utility functions for generating color data URL
 const keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -84,15 +85,6 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className }) 
         }
     };
 
-    const overlayVariants = {
-        rest: {
-            backgroundColor: "rgba(0, 0, 0, 0)"
-        },
-        hover: {
-            backgroundColor: "rgba(31, 41, 55, 0.7)"
-        }
-    };
-
     const titleVariants = {
         rest: {
             opacity: 0,
@@ -109,7 +101,7 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className }) 
     };
 
     return (
-        <Link href={`/days/${project.day}`} className="cursor-pointer px-2 md:px-4 min-w-full w-60 md:w-80">
+        <Link href={`/days/${project.day}`} className="group cursor-pointer px-2 md:px-4 min-w-full w-60 md:w-80">
             <motion.div
                 className="cursor-pointer px-2 md:px-4 min-w-full"
                 initial="hidden"
@@ -126,7 +118,7 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className }) 
                         height={400}
                         quality={50}
                         sizes="(min-width: 640px) 400px, 100vw"
-                        className="object-cover w-full h-full"
+                        className="object-cover w-full h-full group-hover:scale-150 transition-transform duration-300 ease-in-out"
                         priority={true}
                         placeholder='blur'
                         blurDataURL={blurDataURL}
@@ -136,20 +128,21 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className }) 
                         initial="rest"
                         whileHover="hover"
                         animate="rest"
-                        variants={overlayVariants}
                     >
-                        <div className="p-3 h-full flex flex-col justify-between">
+                        <div className="h-full flex flex-col justify-between">
                             <motion.span
-                                className="text-md text-white bg-gray-900/60 dark:bg-black/60 rounded-full w-fit px-3 py-2"
+                                className="m-3 text-md text-white bg-gray-900/60 dark:bg-black/60 rounded-full w-fit px-3 py-2"
                                 whileHover={{ scale: 1.05 }}
                             >
                                 Day {project.day}
                             </motion.span>
                             <motion.span
-                                className="text-lg sm:text-xl text-white"
+                                className="p-3 text-lg sm:text-xl text-gray-900 dark:text-white bg-transparent group-hover:bg-gradient-to-b from-transparent from-0% to-30% to-background/80 dark:to-gray-900/80"
                                 variants={titleVariants}
                             >
-                                {project.title}
+                                <span className="inline-block mt-6">
+                                    {project.title}
+                                </span>
                             </motion.span>
                         </div>
                     </motion.div>

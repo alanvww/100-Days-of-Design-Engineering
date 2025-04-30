@@ -68,7 +68,7 @@ function PageContent({
                     >
                         <div
                             className={cn(
-                                "md:text-[8rem] text-right my-14 text-[3rem] opacity-30 tracking-tight leading-none transition-colors duration-300",
+                                "md:text-9xl text-4xl text-right my-0 md:my-8 w-4/5 ml-auto opacity-30 tracking-tight leading-none transition-colors duration-300",
                                 project?.color ? "text-[var(--accent-color-light)] dark:text-[var(--accent-color-dark)]" : "text-gray-600" // Fallback if no color
                             )}
                             style={project?.color ? {
@@ -81,9 +81,9 @@ function PageContent({
                         </div>
                     </motion.div>
                     {/* Foreground title */}
-                    <div className="relative md:my-32 my-20 w-3/4">
+                    <div className="relative md:my-32 my-6 w-3/4">
                         <motion.h1
-                            className="text-4xl md:text-8xl text-left text-gray-700 dark:text-white bg-blend-multiply px-2 md:px-8 transition-colors duration-300"
+                            className="text-5xl md:text-8xl text-left text-gray-700 dark:text-white bg-blend-multiply px-2 md:px-8 transition-colors duration-300"
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{

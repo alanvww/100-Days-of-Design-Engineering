@@ -94,8 +94,10 @@ export default function AnimatedBackground({
       {
         key: index,
         className: cn('relative inline-flex', child.props.className),
-        // Use activePathId for the persistent data attribute
+        // Use activePathId for the persistent data attribute (actual active link)
         'data-checked': activePathId === id ? 'true' : 'false',
+        // Add attribute to indicate if the visual background is currently on this item
+        'data-visual-active': visualActiveId === id ? 'true' : 'false',
         ...interactionProps,
       },
       <>
