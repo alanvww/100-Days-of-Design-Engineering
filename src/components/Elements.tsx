@@ -2961,6 +2961,14 @@ export default function ProjectListShowcase() {
 }`,
         day: 96
     },
+    {
+        name: 'Glitch Box',
+        component: (
+            <UnicornStudioWrapper link='https://www.unicorn.studio/embed/TwuKr2NQTyHp4sg2SM4X' />
+        ),
+        code: ``,
+        day: 97
+    },
 ];
 
 
