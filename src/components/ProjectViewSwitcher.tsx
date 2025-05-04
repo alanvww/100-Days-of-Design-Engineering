@@ -62,10 +62,10 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
     if (projects.length === 99) {
       const day100Placeholder: Project = {
         day: 100,
-        title: "The Finale!",
+        title: "🎉The Finale!",
         project: "Celebration",
-        image: '', // Placeholder image path
-        color: '#FFD700', // Gold color
+        image: '/assets/day-100/1.png',
+        color: '#FFD700',
       };
       currentProjects.push(day100Placeholder);
     }

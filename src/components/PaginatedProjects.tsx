@@ -3,15 +3,13 @@
 import { useState, useEffect, Suspense, useMemo } from "react"; // Added useMemo import
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransitionRouter } from 'next-view-transitions'
-// Removed Confetti import
 import { Project } from "@/types/ProjectTypes";
 import { ProjectCard } from "./ProjectCard";
-import { Day100Card } from "./Day100Card"; // Import Day100Card
 import { motion } from "motion/react";
 import {
     Pagination,
     PaginationContent,
-    PaginationEllipsis, // Import PaginationEllipsis
+    PaginationEllipsis,
     PaginationItem,
     PaginationLink,
     PaginationNext,
@@ -205,34 +203,19 @@ const ProjectPaginator: React.FC<PaginatedProjectsProps> = ({ projects, onDay100
             >
                 {/* Add explicit types to map callback */}
                 {currentProjects.map((project: Project, index: number) => {
-                    // Use Day100Card or ProjectCard
-                    if (project.day === 100) {
-                        return (
-                            <motion.div
-                                key={project.day}
-                                variants={itemVariants}
-                                custom={100}
-                            >
-                                <Day100Card
-                                    project={project}
-                                    onClick={onDay100Click}
-                                />
-                            </motion.div>
 
-                        );
-                    } else {
-                        return (
-                            // Keep motion.div wrapper for variants if needed, or integrate into ProjectCard if possible
-                            <motion.div
-                                key={project.day}
-                                variants={itemVariants}
-                                custom={index}
-                            >
-                                <ProjectCard project={project} />
-                            </motion.div>
-                        );
-                    }
-                })}
+                    return (
+                        <motion.div
+                            key={project.day}
+                            variants={itemVariants}
+                            custom={index}
+                            onClick={project.day === 100 ? onDay100Click : undefined}
+                        >
+                            <ProjectCard project={project} />
+                        </motion.div>
+                    );
+                }
+                )}
             </motion.section>
 
             <ProjectPagination
