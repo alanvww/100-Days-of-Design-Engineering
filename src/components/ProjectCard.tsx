@@ -14,12 +14,12 @@ const triplet = (e1: number, e2: number, e3: number) =>
     keyStr.charAt(((e2 & 15) << 2) | (e3 >> 6)) +
     keyStr.charAt(e3 & 63);
 
-const rgbDataURL = (r: number, g: number, b: number) =>
+export const rgbDataURL = (r: number, g: number, b: number) => // Exported
     `data:image/gif;base64,R0lGODlhAQABAPAA${triplet(0, r, g) + triplet(b, 255, 255)
     }/yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==`;
 
 // Function to convert hex to RGB
-const hexToRGB = (hex: string) => {
+export const hexToRGB = (hex: string) => { // Exported
     // Remove the hash if present
     hex = hex.replace(/^#/, '');
 
@@ -48,7 +48,7 @@ const ProjectCardSkeleton = () => (
 );
 
 interface ProjectCardProps {
-    project: Project; // Assuming Project type has a color property of type string
+    project: Project;
     className?: string;
 }
 

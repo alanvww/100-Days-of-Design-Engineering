@@ -1,10 +1,12 @@
 'use client'
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useMemo } from "react"; // Added useMemo import
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransitionRouter } from 'next-view-transitions'
+// Removed Confetti import
 import { Project } from "@/types/ProjectTypes";
 import { ProjectCard } from "./ProjectCard";
+import { Day100Card } from "./Day100Card"; // Import Day100Card
 import { motion } from "motion/react";
 import {
     Pagination,
@@ -24,7 +26,9 @@ interface ProjectPaginationProps {
 }
 
 interface PaginatedProjectsProps {
-    projects: Project[];
+    projects: Project[]; // This will now potentially include Day 100 from the parent
+    onDay100Click: () => void;
+    // Removed totalFetchedProjects prop
 }
 
 const ITEMS_PER_PAGE = 12;
@@ -136,13 +140,17 @@ const ProjectPagination: React.FC<ProjectPaginationProps> = ({
 };
 
 // Component that uses useSearchParams
-const ProjectPaginator: React.FC<PaginatedProjectsProps> = ({ projects }) => {
+// Accept projects (which might include Day 100) and onDay100Click
+const ProjectPaginator: React.FC<PaginatedProjectsProps> = ({ projects, onDay100Click }) => {
     const searchParams = useSearchParams();
     const [currentPage, setCurrentPage] = useState<number>(() => {
         const pageParam = searchParams.get('page');
         const parsedPage = pageParam ? parseInt(pageParam, 10) : 1;
         return isNaN(parsedPage) ? 1 : parsedPage;
     });
+
+    // Removed the useMemo hook for adding Day 100 placeholder
+    // The 'projects' prop now comes potentially pre-populated with Day 100
 
     const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
 
@@ -153,6 +161,7 @@ const ProjectPaginator: React.FC<PaginatedProjectsProps> = ({ projects }) => {
             url.searchParams.set('page', '1');
             window.history.replaceState({}, '', url.pathname + url.search);
         }
+        // Depend on the calculated projects array length
     }, [projects.length, currentPage, totalPages]);
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -186,6 +195,7 @@ const ProjectPaginator: React.FC<PaginatedProjectsProps> = ({ projects }) => {
 
     return (
         <>
+            {/* Removed Confetti rendering */}
             <motion.section
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 justify-items-center"
                 variants={containerVariants}
@@ -193,15 +203,36 @@ const ProjectPaginator: React.FC<PaginatedProjectsProps> = ({ projects }) => {
                 animate="visible"
                 key={currentPage} // Re-animate when page changes
             >
-                {currentProjects.map((project, index) => (
-                    <motion.div
-                        key={project.day}
-                        variants={itemVariants}
-                        custom={index}
-                    >
-                        <ProjectCard project={project} />
-                    </motion.div>
-                ))}
+                {/* Add explicit types to map callback */}
+                {currentProjects.map((project: Project, index: number) => {
+                    // Use Day100Card or ProjectCard
+                    if (project.day === 100) {
+                        return (
+                            <motion.div
+                                key={project.day}
+                                variants={itemVariants}
+                                custom={100}
+                            >
+                                <Day100Card
+                                    project={project}
+                                    onClick={onDay100Click}
+                                />
+                            </motion.div>
+
+                        );
+                    } else {
+                        return (
+                            // Keep motion.div wrapper for variants if needed, or integrate into ProjectCard if possible
+                            <motion.div
+                                key={project.day}
+                                variants={itemVariants}
+                                custom={index}
+                            >
+                                <ProjectCard project={project} />
+                            </motion.div>
+                        );
+                    }
+                })}
             </motion.section>
 
             <ProjectPagination
@@ -214,10 +245,14 @@ const ProjectPaginator: React.FC<PaginatedProjectsProps> = ({ projects }) => {
 };
 
 // Main component that wraps the paginator with Suspense
-export const PaginatedProjects: React.FC<PaginatedProjectsProps> = ({ projects }) => {
+// Pass down necessary props
+export const PaginatedProjects: React.FC<PaginatedProjectsProps> = ({ projects, onDay100Click }) => {
     return (
         <Suspense fallback={<div className="py-10 text-center text-zinc-600 dark:text-zinc-300">Loading projects...</div>}>
-            <ProjectPaginator projects={projects} />
+            <ProjectPaginator
+                projects={projects}
+                onDay100Click={onDay100Click}
+            />
         </Suspense>
     );
 };

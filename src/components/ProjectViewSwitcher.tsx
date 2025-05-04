@@ -1,12 +1,16 @@
 'use client'
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import Image from "next/image"; // Import Image
+import { useRouter } from 'next/navigation'; // Import useRouter
+import Confetti from 'react-confetti'; // Import Confetti
 import { Project } from '@/types/ProjectTypes';
 import { PaginatedProjects } from '@/components/PaginatedProjects';
-import { ProjectCard } from '@/components/ProjectCard';
+import { ProjectCard } from '@/components/ProjectCard'; // Removed helper imports, not needed here anymore
 import { Button } from '@/components/ui/button';
 import { SquaresFour, Rows, CaretDown, CaretUp, ArrowsDownUp } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
+import { pre } from 'motion/react-client';
 
 interface ProjectViewProps {
   projects: Project[];
@@ -17,8 +21,29 @@ interface GroupedProjects {
 }
 
 const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
+  const router = useRouter();
   const [viewMode, setViewMode] = useState<'paginated' | 'carousel'>('paginated');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+
+  // Effect to get window size for confetti
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+    handleResize(); // Set initial size
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Handler for Day 100 click
+  const handleDay100Click = () => {
+    setShowConfetti(prev => !prev);
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 7000);
+  };
 
   const groupedProjects = useMemo(() => {
     return projects.reduce((acc: GroupedProjects, project) => {
@@ -31,14 +56,33 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
     }, {});
   }, [projects]);
 
+  // Create the combined list including the potential Day 100 placeholder
+  const allDisplayProjects = useMemo(() => {
+    const currentProjects = [...projects];
+    if (projects.length === 99) {
+      const day100Placeholder: Project = {
+        day: 100,
+        title: "The Finale!",
+        project: "Celebration",
+        image: '', // Placeholder image path
+        color: '#FFD700', // Gold color
+      };
+      currentProjects.push(day100Placeholder);
+    }
+    return currentProjects;
+  }, [projects]);
+
+
   const sortedProjects = useMemo(() => {
-    return [...projects].sort((a, b) => {
+    // Sort the combined list
+    return [...allDisplayProjects].sort((a, b) => {
       if (sortOrder === 'asc') {
         return a.day - b.day;
       }
       return b.day - a.day;
     });
-  }, [projects, sortOrder]);
+    // Depend on the combined list and sort order
+  }, [allDisplayProjects, sortOrder]);
 
   const toggleSortOrder = () => {
     setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
@@ -214,24 +258,26 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
                         className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4"
                         variants={carouselVariants}
                       >
-                        {projectGroup.map((project, index) => (
-                          <motion.div
-                            key={project.day}
-                            className="flex-none snap-start px-2 w-80"
-                            variants={itemVariants}
-                            custom={index}
-                            whileHover={{
-                              scale: 1.03,
-                              transition: {
-                                type: "spring",
-                                stiffness: 400,
-                                damping: 10
-                              }
-                            }}
-                          >
-                            <ProjectCard project={project} />
-                          </motion.div>
-                        ))}
+                        {/* Removed Day 100 filter */}
+                        {projectGroup
+                          .map((project, index) => (
+                            <motion.div
+                              key={project.day}
+                              className="flex-none snap-start px-2 w-80"
+                              variants={itemVariants}
+                              custom={index}
+                              whileHover={{
+                                scale: 1.03,
+                                transition: {
+                                  type: "spring",
+                                  stiffness: 400,
+                                  damping: 10
+                                }
+                              }}
+                            >
+                              <ProjectCard project={project} />
+                            </motion.div>
+                          ))}
                       </motion.div>
                     </div>
                     <div className="absolute right-0 top-0 bottom-0 w-3 md:w-9 bg-gradient-to-l from-background to-transparent dark:from-gray-900 z-10 pointer-events-none transition-colors duration-300"></div>
@@ -247,24 +293,26 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
                   variants={gridVariants}
                 >
                   <motion.div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 px-4 pt-2">
-                    {projectGroup.map((project, index) => (
-                      <motion.div
-                        key={project.day}
-                        className="w-full"
-                        variants={itemVariants}
-                        custom={index}
-                        whileHover={{
-                          scale: 1.03,
-                          transition: {
-                            type: "spring",
-                            stiffness: 400,
-                            damping: 10
-                          }
-                        }}
-                      >
-                        <ProjectCard project={project} />
-                      </motion.div>
-                    ))}
+                    {/* Removed Day 100 filter */}
+                    {projectGroup
+                      .map((project, index) => (
+                        <motion.div
+                          key={project.day}
+                          className="w-full"
+                          variants={itemVariants}
+                          custom={index}
+                          whileHover={{
+                            scale: 1.03,
+                            transition: {
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10
+                            }
+                          }}
+                        >
+                          <ProjectCard project={project} />
+                        </motion.div>
+                      ))}
                   </motion.div>
                 </motion.div>
               </AnimatePresence>
@@ -301,7 +349,18 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative"> {/* Added relative positioning */}
+      {/* Render Confetti at the top level */}
+      {showConfetti && windowSize.width > 0 && (
+        <Confetti
+          width={windowSize.width}
+          height={windowSize.height}
+          recycle={false}
+          numberOfPieces={500}
+          tweenDuration={2800}
+          style={{ position: 'fixed', top: 0, left: 0, zIndex: 9999 }} // Ensure it's full screen and above everything
+        />
+      )}
       <div className={`flex px-8 ${viewMode === 'paginated' ? 'flex-col-reverse gap-2  items-end md:flex-row justify-stretch md:justify-between' : 'justify-end'}`}>
         {viewMode === 'paginated' && (
           <motion.div
@@ -352,7 +411,12 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
             exit="exit"
             variants={viewTransitionVariants}
           >
-            <PaginatedProjects projects={sortedProjects} />
+            {/* Pass the sorted list (potentially including Day 100) */}
+            <PaginatedProjects
+              projects={sortedProjects} // Pass the sorted array
+              onDay100Click={handleDay100Click}
+            // Removed totalFetchedProjects prop
+            />
           </motion.div>
         ) : (
           <motion.div
