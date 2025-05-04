@@ -10,6 +10,8 @@
   },
   "packageManager": "bun@1.2.2",
   "dependencies": {
+    "@ai-sdk/google": "^1.2.14",
+    "@ai-sdk/react": "^1.2.11",
     "@codemirror/lang-javascript": "^6.2.3",
     "@phosphor-icons/react": "^2.1.7",
     "@radix-ui/react-select": "^2.2.2",
@@ -23,6 +25,7 @@
     "@supabase/supabase-js": "^2.49.4",
     "@uiw/codemirror-theme-dracula": "^4.23.10",
     "@uiw/react-codemirror": "^4.23.10",
+    "ai": "^4.3.13",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -44,7 +47,8 @@
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.175.0",
     "unified": "^11.0.5",
-    "usehooks-ts": "^3.1.1"
+    "usehooks-ts": "^3.1.1",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
