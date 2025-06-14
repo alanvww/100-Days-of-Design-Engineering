@@ -115,7 +115,7 @@ function PageContent({
                         className="mt-16"
                     />
 
-                    {/* Feedback Bar - Pass initial counts */}
+                    {/* Feedback Bar - Pass initial counts 
                     <div className="mt-12 mb-8">
                         <FeedbackBar
                             dayId={dayNumber}
@@ -124,7 +124,7 @@ function PageContent({
                             initialLikes={initialLikes} // Pass prop
                             initialDislikes={initialDislikes} // Pass prop
                         />
-                    </div>
+                    </div> */}
                 </article>
             </main>
             <Footer />
@@ -150,7 +150,7 @@ export default async function DayPage({ params }: PageProps) {
     }
 
     // Fetch initial feedback counts here using the server action
-    const { likes: initialLikes, dislikes: initialDislikes } = await getFeedbackCounts(dayNumber);
+    // const { likes: initialLikes, dislikes: initialDislikes } = await getFeedbackCounts(dayNumber);
 
     return (
         <Suspense fallback={<Loading />}>
@@ -160,8 +160,8 @@ export default async function DayPage({ params }: PageProps) {
                 content={content}
                 dayNumber={dayNumber}
                 totalDays={totalDays}
-                initialLikes={initialLikes} // Pass fetched counts
-                initialDislikes={initialDislikes} // Pass fetched counts
+                initialLikes={0} // Pass fetched counts
+                initialDislikes={0} // Pass fetched counts
             /> : <Loading />}
         </Suspense>
     );
