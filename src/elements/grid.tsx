@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import * as motion from 'motion/react-client';
+import { Variants } from 'motion/react';
 
 // Define a generic item type that can work for various use cases
 export type GridItem = {
@@ -33,7 +34,7 @@ export default function Grid({
     }
 }: GridProps) {
     // Animation variants
-    const containerVariants = {
+    const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
@@ -43,7 +44,7 @@ export default function Grid({
         },
     };
 
-    const itemVariants = {
+    const itemVariants: Variants = {
         hidden: {
             opacity: 0,
             y: 20,

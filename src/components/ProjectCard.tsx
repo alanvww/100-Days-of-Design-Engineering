@@ -83,7 +83,7 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className }) 
                 damping: 20
             }
         }
-    };
+    } as const;
 
     const titleVariants = {
         rest: {

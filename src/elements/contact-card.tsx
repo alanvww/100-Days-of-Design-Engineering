@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { XLogo, LinkedinLogo, GithubLogo, Envelope } from '@phosphor-icons/react';
 
 // types/index.ts
@@ -89,7 +89,7 @@ const ContactCardLayout: React.FC<ContactCardProps> = ({
     };
 
     // Animation variants
-    const cardVariants = {
+    const cardVariants: Variants = {
         front: {
             rotateY: 0,
             transition: { duration: 0.5 }
@@ -100,7 +100,7 @@ const ContactCardLayout: React.FC<ContactCardProps> = ({
         }
     };
 
-    const contentVariants = {
+    const contentVariants: Variants = {
         front: {
             opacity: 1,
             transition: { delay: 0.2, duration: 0.3 }
@@ -111,7 +111,7 @@ const ContactCardLayout: React.FC<ContactCardProps> = ({
         }
     };
 
-    const detailsVariants = {
+    const detailsVariants: Variants = {
         hidden: {
             opacity: 0,
             y: 20,
@@ -124,7 +124,7 @@ const ContactCardLayout: React.FC<ContactCardProps> = ({
         }
     };
 
-    const itemVariants = {
+    const itemVariants: Variants = {
         hidden: { opacity: 0, y: 10 },
         visible: { opacity: 1, y: 0 }
     };

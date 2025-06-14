@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion, Variants } from 'motion/react';
 import { Card } from '@/components/ui/card';
 
 const PanelReveal = () => {
@@ -44,7 +44,7 @@ const PanelReveal = () => {
               damping: 30
             }
           }
-        }}
+        } as Variants}
         style={{
           transformOrigin: "top",
           transformStyle: "preserve-3d"

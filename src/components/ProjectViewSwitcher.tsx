@@ -8,7 +8,7 @@ import { PaginatedProjects } from '@/components/PaginatedProjects';
 import { ProjectCard } from '@/components/ProjectCard'; // Removed helper imports, not needed here anymore
 import { Button } from '@/components/ui/button';
 import { SquaresFour, Rows, CaretDown, CaretUp, ArrowsDownUp } from '@phosphor-icons/react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, Variants } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { pre } from 'motion/react-client';
 
@@ -101,7 +101,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
     };
 
     // Animation variants for the container of all sections
-    const containerVariants = {
+    const containerVariants: Variants = {
       hidden: { opacity: 0 },
       visible: {
         opacity: 1,
@@ -114,7 +114,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
     };
 
     // Animation variants for each section (project type)
-    const sectionVariants = {
+    const sectionVariants: Variants = {
       hidden: { opacity: 0, y: 40 },
       visible: (i: number) => ({
         opacity: 1,
@@ -131,7 +131,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
     };
 
     // Animation variants for the heading
-    const headingVariants = {
+    const headingVariants: Variants = {
       hidden: { opacity: 0, x: -30 },
       visible: {
         opacity: 1,
@@ -146,7 +146,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
     };
 
     // Animation variants for the carousel container
-    const carouselVariants = {
+    const carouselVariants: Variants = {
       hidden: { opacity: 0, scale: 0.98 },
       visible: {
         opacity: 1,
@@ -160,7 +160,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
     };
 
     // Animation variants for each project card
-    const itemVariants = {
+    const itemVariants: Variants = {
       hidden: { opacity: 0, scale: 0.8, y: 20 },
       visible: (i: number) => ({
         opacity: 1,
@@ -176,7 +176,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
     };
 
     // Grid container variants for expanded view
-    const gridVariants = {
+    const gridVariants: Variants = {
       collapsed: {
         height: 0,
         opacity: 0,
@@ -329,7 +329,7 @@ const ProjectViewSwitcher: React.FC<ProjectViewProps> = ({ projects }) => {
 
 
   // Animation variants for view transitions
-  const viewTransitionVariants = {
+  const viewTransitionVariants: Variants = {
     initial: { opacity: 0, y: 20 },
     animate: {
       opacity: 1,

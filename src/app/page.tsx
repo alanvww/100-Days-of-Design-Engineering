@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/Footer";
 import { Navbar } from "@/components/ui/Navbar";
 import ProjectViewSwitcher from "@/components/ProjectViewSwitcher";
 import * as motion from "motion/react-client";
+import { Variants } from 'motion/react';
 
 
 export default async function Home() {
@@ -17,27 +18,23 @@ export default async function Home() {
                     <Navbar />
                     <motion.h1
                         className="text-4xl md:text-6xl text-left px-2 md:px-8"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                            type: "spring",
-                            stiffness: 400,
-                            damping: 30,
-                            delay: 0.2
-                        }}
+                        initial="hidden"
+                        animate="visible"
+                        variants={{
+                            hidden: { opacity: 0, y: 20 },
+                            visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 400, damping: 30, delay: 0.2 } }
+                        } as Variants}
                     >
                         100 Days of Design Engineering
                     </motion.h1>
                     <motion.p
                         className="text-base md:text-lg text-left text-muted-foreground dark:text-gray-200 px-2 md:px-10"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                            type: "spring",
-                            stiffness: 400,
-                            damping: 30,
-                            delay: 0.3
-                        }}
+                        initial="hidden"
+                        animate="visible"
+                        variants={{
+                            hidden: { opacity: 0, y: 20 },
+                            visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 400, damping: 30, delay: 0.3 } }
+                        } as Variants}
                     >
                         Showcase of Alan&apos;s design engineering journey over 100 days.
                     </motion.p>

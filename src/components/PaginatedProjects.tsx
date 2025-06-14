@@ -189,7 +189,7 @@ const ProjectPaginator: React.FC<PaginatedProjectsProps> = ({ projects, onDay100
                 damping: 24
             }
         }
-    };
+    } as const;
 
     return (
         <>

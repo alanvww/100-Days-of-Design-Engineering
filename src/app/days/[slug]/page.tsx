@@ -10,6 +10,7 @@ import { Suspense } from 'react';
 import Loading from './loading';
 import { ProjectFrontmatter } from '@/lib/markdown';
 import * as motion from "motion/react-client";
+import { Variants } from 'motion/react';
 import FeedbackBar from '@/components/FeedbackBar';
 import { getFeedbackCounts } from '@/app/actions/feedback'; // Import the server action
 
@@ -57,14 +58,12 @@ function PageContent({
                     {/* Background project name */}
                     <motion.div
                         className="absolute left-0 w-full overflow-hidden select-none pointer-events-none transition-colors duration-300"
-                        initial={{ opacity: 0, x: -50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{
-                            type: "spring",
-                            stiffness: 300,
-                            damping: 30,
-                            delay: 0.1
-                        }}
+                        initial="hidden"
+                        animate="visible"
+                        variants={{
+                            hidden: { opacity: 0, x: -50 },
+                            visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 30, delay: 0.1 } }
+                        } as Variants}
                     >
                         <div
                             className={cn(
@@ -84,14 +83,12 @@ function PageContent({
                     <div className="relative md:my-32 my-6 w-3/4">
                         <motion.h1
                             className="text-5xl md:text-8xl text-left text-gray-700 dark:text-white bg-blend-multiply px-2 md:px-8 transition-colors duration-300"
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{
-                                type: "spring",
-                                stiffness: 400,
-                                damping: 30,
-                                delay: 0.3
-                            }}
+                            initial="hidden"
+                            animate="visible"
+                            variants={{
+                                hidden: { opacity: 0, y: 30 },
+                                visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 400, damping: 30, delay: 0.3 } }
+                            } as Variants}
                         >
                             Day {slug}: {project?.title}
                         </motion.h1>

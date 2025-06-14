@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, Variants } from 'motion/react';
 import { X } from '@phosphor-icons/react';
 
 interface Project {
@@ -42,12 +42,12 @@ export default function ProjectListShowcase() {
     };
 
     // Modal animation variants
-    const backdropVariants = {
+    const backdropVariants: Variants = {
         hidden: { opacity: 0 },
         visible: { opacity: 1 },
     };
 
-    const modalVariants = {
+    const modalVariants: Variants = {
         hidden: { opacity: 0, scale: 0.9, y: 20 },
         visible: { opacity: 1, scale: 1, y: 0 },
         exit: { opacity: 0, scale: 0.9, y: 20 },
