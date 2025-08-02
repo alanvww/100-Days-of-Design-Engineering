@@ -101,7 +101,7 @@ const ProjectCardContent: React.FC<ProjectCardProps> = ({ project, className }) 
     };
 
     return (
-        <Link href={project.day == 100 ? `#` : `/days/${project.day}`} className="group cursor-pointer px-2 md:px-4 min-w-full w-60 md:w-80">
+        <Link href={project.day == 100 ? `#` : `/days/${project.day}`} className="group cursor-pointer px-2 md:px-4 w-60 md:w-80">
             <motion.div
                 className="cursor-pointer px-2 md:px-4 min-w-full"
                 initial="hidden"

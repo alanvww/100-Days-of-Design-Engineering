@@ -51,7 +51,10 @@ function PageContent({
     initialDislikes: number; // Add new prop
 }) {
     return (
-        <div className="min-h-screen flex flex-col bg-background text-foreground dark:bg-gray-900 dark:text-white transition-colors duration-300">
+        <div
+            className="min-h-screen flex flex-col bg-background text-foreground dark:bg-gray-900 dark:text-white transition-colors duration-300"
+            style={{ viewTransitionName: `day-page-${slug}` }}
+        >
             <main className="flex-1 container mx-auto px-4 py-8 sm:py-16">
                 <div className="relative">
                     <Navbar />
@@ -61,9 +64,10 @@ function PageContent({
                         initial="hidden"
                         animate="visible"
                         variants={{
-                            hidden: { opacity: 0, x: -50 },
-                            visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 30, delay: 0.1 } }
+                            hidden: { opacity: 0, transform: "translateX(-50px)" },
+                            visible: { opacity: 1, transform: "translateX(0px)", transition: { type: "spring", stiffness: 300, damping: 30, delay: 0.1 } }
                         } as Variants}
+                        style={{ willChange: 'transform, opacity' }}
                     >
                         <div
                             className={cn(
@@ -86,15 +90,19 @@ function PageContent({
                             initial="hidden"
                             animate="visible"
                             variants={{
-                                hidden: { opacity: 0, y: 30 },
-                                visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 400, damping: 30, delay: 0.3 } }
+                                hidden: { opacity: 0, transform: "translateY(30px)" },
+                                visible: { opacity: 1, transform: "translateY(0px)", transition: { type: "spring", stiffness: 400, damping: 30, delay: 0.3 } }
                             } as Variants}
+                            style={{
+                                viewTransitionName: `day-title-${slug}`,
+                                willChange: 'transform, opacity'
+                            }}
                         >
                             Day {slug}: {project?.title}
                         </motion.h1>
                     </div>
                 </div>
-                <article className="max-w-4xl mx-auto px-4 mt-16">
+                <article className="max-w-4xl mx-auto px-4 mt-16" style={{ viewTransitionName: `day-content-${slug}` }}>
                     <MarkdownContent
                         content={content ? content : ''}
                         className="prose-headings:scroll-mt-20"
