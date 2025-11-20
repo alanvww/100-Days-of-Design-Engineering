@@ -488,7 +488,7 @@ Use this context to answer concisely, then call the 'displayProjectCard' tool.
 		console.log('--- End System Prompt ---');
 
 		const result = await streamText({
-			model: google('models/gemini-1.5-flash-latest'), // Using Google model
+			model: google('gemini-flash-lite-latest'), // Using Gemini 2.5 Flash Lite
 			system: systemPrompt,
 			messages: messages, // Send the full history
 			tools: {
